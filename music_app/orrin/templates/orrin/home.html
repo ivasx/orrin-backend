@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Головна - Orrin{% endblock %}
+
+{% block content %}
+<div class="home-page">
+
+    <!-- Секція "Слухати зараз" -->
+    <section class="music-section">
+        <div class="section-header">
+            <h2 class="section-title">Слухати зараз</h2>
+            <a href="#" class="section-link">Більше</a>
+        </div>
+        <div class="music-grid">
+            {% for track in current_tracks %}
+            <div class="music-card">
+                <div class="music-cover">
+                    <img src="{{ track.cover_image }}" alt="{{ track.title }}" class="cover-image">
+                    <button class="play-btn" data-track-id="{{ track.id }}">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5V19L19 12L8 5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="track-title">{{ track.title }}</h3>
+                <p class="track-artist">{{ track.artist }}</p>
+            </div>
+            {% empty %}
+            <!-- Заглушка для демонстрації -->
+            <div class="music-card">
+                <div class="music-cover">
+                    <img src="{% static 'images/no-more-tears.jpg' %}" alt="No More Tears" class="cover-image">
+                    <button class="play-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5V19L19 12L8 5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="track-title">No More Tears</h3>
+                <p class="track-artist">Ozzy Osbourn</p>
+            </div>
+            <div class="music-card">
+                <div class="music-cover">
+                    <img src="{% static 'images/no-more-tears.jpg' %}" alt="No More Tears" class="cover-image">
+                    <button class="play-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5V19L19 12L8 5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="track-title">No More Tears</h3>
+                <p class="track-artist">Ozzy Osbourn</p>
+            </div>
+            <div class="music-card">
+                <div class="music-cover">
+                    <img src="{% static 'images/no-more-tears.jpg' %}" alt="No More Tears" class="cover-image">
+                    <button class="play-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5V19L19 12L8 5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="track-title">No More Tears</h3>
+                <p class="track-artist">Ozzy Osbourn</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Секція "Популярні виконавці" -->
+    <section class="music-section">
+        <div class="section-header">
+            <h2 class="section-title">Популярні виконавці</h2>
+            <a href="#" class="section-link">Більше</a>
+        </div>
+        <div class="artists-grid">
+            {% for artist in popular_artists %}
+            <div class="artist-card">
+                <div class="artist-avatar">
+                    <img src="{{ artist.avatar }}" alt="{{ artist.name }}" class="avatar-image">
+                </div>
+                <h3 class="artist-name">{{ artist.name }}</h3>
+                <p class="artist-description">{{ artist.description }}</p>
+            </div>
+            {% empty %}
+            <!-- Заглушка для демонстрації -->
+            {% for i in "12345" %}
+            <div class="artist-card">
+                <div class="artist-avatar">
+                    <img src="{% static 'images/nirvana-avatar.jpg' %}" alt="NIRVANA" class="avatar-image">
+                </div>
+                <h3 class="artist-name">NIRVANA</h3>
+                <p class="artist-description">oh, well, whatever, nevermind</p>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Секція "Від друзів" -->
+    <section class="music-section">
+        <div class="section-header">
+            <h2 class="section-title">Від друзів</h2>
+            <a href="#" class="section-link">Більше</a>
+        </div>
+        <div class="friends-section">
+            <p class="friends-message">Увійдіть щоб отримувати рекомендації від друзів</p>
+            <a href="{% url 'admin:login' %}" class="btn btn-primary">Увійти</a>
+        </div>
+    </section>
+
+    <!-- Секція "Якість там рубрика" -->
+    <section class="music-section">
+        <div class="section-header">
+            <h2 class="section-title">Якість там рубрика</h2>
+            <a href="#" class="section-link">Більше</a>
+        </div>
+        <div class="music-grid">
+            {% for track in featured_tracks %}
+            <div class="music-card">
+                <div class="music-cover">
+                    <img src="{{ track.cover_image }}" alt="{{ track.title }}" class="cover-image">
+                    <button class="play-btn" data-track-id="{{ track.id }}">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5V19L19 12L8 5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="track-title">{{ track.title }}</h3>
+                <p class="track-artist">{{ track.artist }}</p>
+            </div>
+            {% empty %}
+            <!-- Заглушка для демонстрації -->
+            {% for i in "123" %}
+            <div class="music-card">
+                <div class="music-cover">
+                    <img src="{% static 'images/no-more-tears.jpg' %}" alt="No More Tears" class="cover-image">
+                    <button class="play-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5V19L19 12L8 5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <h3 class="track-title">No More Tears</h3>
+                <p class="track-artist">Ozzy Osbourn</p>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+{% endblock %}

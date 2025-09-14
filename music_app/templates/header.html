@@ -1,0 +1,54 @@
+{% load static %}
+
+<header class="header">
+    <div class="header-container">
+        <!-- Ліва група: бургер + лого + назва + пошук -->
+        <div class="left-group">
+            <!-- Бургер-меню -->
+            <button class="menu-toggle" aria-label="Відкрити меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Логотип та назва -->
+            <div class="brand">
+                <img src="{% static 'images/orrin-logo.png' %}" alt="Orrin Logo" class="logo">
+                <span class="site-name">Orrin</span>
+            </div>
+
+            <!-- Пошук -->
+            <div class="search-wrapper">
+                <form class="search-form" method="GET" action="">
+                    <div class="search-field">
+            <span class="search-icon-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path d="M21 21L16.5 16.5M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+                          fill="none" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </span>
+                        <input
+                                type="search"
+                                name="q"
+                                placeholder="Що хочете послухати?"
+                                class="search-input"
+                                value="{{ request.GET.q|default:'' }}"
+                        >
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Права група: реєстрація + увійти -->
+        <div class="right-group">
+            {% if user.is_authenticated %}
+            <span class="username">{{ user.username }}</span>
+            <a href="{% url 'admin:logout' %}" class="btn btn-outline">Вийти</a>
+            {% else %}
+            <span class="register-text">Зареєструватися</span>
+            <a href="{% url 'admin:login' %}" class="btn btn-primary">Увійти</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
