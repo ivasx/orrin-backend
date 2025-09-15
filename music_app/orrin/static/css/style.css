@@ -49,6 +49,10 @@
     border-radius: 2px;
 }
 
+.menu-toggle:hover span {
+    background-color: #636363;
+}
+
 .brand {
     display: flex;
     align-items: center;
@@ -102,6 +106,9 @@
     background-color: #272727;
 }
 
+.search-input:hover {
+    border: 1px solid #ffffff;
+}
 
 /* Права група */
 .right-group {
@@ -114,11 +121,31 @@
 .register-text {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
-    font-size: 12px;
-    color: white;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.register-text:hover {
+    color: #636363;
 }
 
 .btn-primary {
     width: 145px;
     height: 35px;
+    background-color: #ffffff;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    color: #000000;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary:hover {
+    background-color: #636363;
+    color: #ffffff;
 }
