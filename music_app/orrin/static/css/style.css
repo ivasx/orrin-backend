@@ -1,151 +1,612 @@
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* ========== Глобальні змінні ========== */
+:root {
+    --header-height: 70px;
+
+    --burger-height: 22px;
+    --burger-top: calc(var(--header-height) / 2 - var(--burger-height) / 2);
+    --burger-left: var(--burger-top);
+    --burger-width: 30px;
+    --burger-right: var(--burger-left);
+
+    --logo-left: var(--sidebar-width);
+    --sidebar-width: calc(var(--burger-left) + var(--burger-width) + var(--burger-right));
+
+}
+
+
+/* ========== Глобальні стилі ========== */
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
-/* Header */
+html, body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #918f8f;
+    color: #fff;
+}
+
+
+/* ========== Header ========== */
+:root {
+    --header-height: 70px;
+}
+
+.header .container-fluid,
+.header .row {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.header .container-fluid,
+.header .row {
+    height: 100%;
+    margin: 0;
+}
+
 .header {
-    background-color: #000;
-    border-bottom: 1px solid #282828;
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 1000;
-    height: 70px;
-    display: flex;
-    align-items: center;
-}
-
-.header-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    left: 0;
     width: 100%;
-    padding: 0 70px;
+    height: var(--header-height);
+    z-index: 1200;
 }
-
-.left-group {
+/* ========== Бургер-меню ========== */
+.menu-toggle {
+    position: absolute;
+    right: var(--burger-right);
+    left: var(--burger-left);
+    top: var(--burger-top);
+    transform: translateY(0);
+    border: none !important;
+    background: none !important;
+    color: #fff;
+    width: var(--burger-width);
+    height: 22px;
+    padding: 0;
     display: flex;
     align-items: center;
-    gap: 40px;
+    justify-content: center;
+    z-index: 1100;
 }
 
-.menu-toggle {
-    width: 28px;
-    height: 22px;
+.navbar-toggler-icon-custom {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.menu-toggle span {
-    display: block;
     width: 100%;
+    height: 100%;
+}
+
+.navbar-toggler-icon-custom span {
+    display: block;
     height: 3px;
-    background-color: white;
+    background: #fff;
     border-radius: 2px;
+    transition: background 0.2s;
 }
 
-.menu-toggle:hover span {
-    background-color: #636363;
+.menu-toggle:hover .navbar-toggler-icon-custom span {
+    background: #636363;
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-}
 
+/* ========== Логотип + назва ========== */
 .logo {
-    width: 49px;
-    height: 47px;
+    transition: transform 0.2s, opacity 0.2s;
 }
 
 .site-name {
-    font-family: 'Montserrat', sans-serif;
     font-weight: 600;
-    font-size: 20px;
-    color: white;
-    margin-left: 10px;
+    font-size: 1.25rem;
+    color: #fff;
+    white-space: nowrap;
 }
 
-.search-field {
-    position: relative;
+/* ========== Пошук (десктоп) ========== */
+.search-wrapper {
     display: flex;
-    align-items: center;
+    position: relative;
+    max-width: 400px;
+    width: 100%;
 }
 
 .search-icon-wrapper {
     position: absolute;
-    left: 10px;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
+    padding: 0;
     color: #636363;
 }
 
 .search-icon {
     width: 20px;
     height: 20px;
-    stroke: currentColor;
+}
+
+.search-icon-wrapper:hover {
+    color: #fff;
 }
 
 .search-input {
-    width: 330px;
-    height: 35px;
-    padding: 0 10px 0 40px;
+    background: #272727;
+    border: 1px solid transparent;
     border-radius: 10px;
-    border: none;
-    color: #636363; /* колір тексту */
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500; /* Medium */
-    font-size: 14px;
+    color: #636363;
+    font-weight: 500;
+    font-size: 0.875rem;
+    height: 40px;
+    padding-left: 40px;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
     background-color: #272727;
+    border-color: #fff;
+    color: #636363;
+    box-shadow: none;
+    outline: none;
 }
 
 .search-input:hover {
-    border: 1px solid #ffffff;
+    border-color: #fff;
 }
 
-/* Права група */
-.right-group {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 30px;
+.search-input::placeholder {
+    color: #636363 !important;
+    opacity: 1;
 }
 
-.register-text {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    color: #ffffff;
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-.register-text:hover {
+input[type="search"]::-moz-search-clear {
+    display: none;
+}
+
+input[type="search"]::-ms-clear {
+    display: none;
+}
+
+.search-clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
     color: #636363;
+    font-size: 30px;
+    cursor: pointer;
+    display: none;
+    z-index: 10;
 }
 
-.btn-primary {
-    width: 145px;
-    height: 35px;
-    background-color: #ffffff;
-    border-radius: 25px;
-    text-align: center;
-    text-decoration: none;
-    color: #000000;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
+.search-clear-btn:hover {
+    color: #fff;
+}
+
+/* ========== Кнопка-лупа ========== */
+.search-toggle {
+    border: none;
+    background: none;
+    color: #fff !important;
+    margin-right: 15px;
+    transform: translateY(-2px);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: color 0.2s;
 }
 
-.btn-primary:hover {
-    background-color: #636363;
-    color: #ffffff;
+.search-toggle:focus,
+.search-toggle:active {
+    outline: none;
+    box-shadow: none;
+    color: #fff !important;
+}
+
+.search-toggle svg {
+    fill: #fff !important;
+}
+
+.search-toggle:active::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: rgba(128, 128, 128, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.search-toggle svg.icon-search {
+    display: block;
+}
+
+.search-toggle svg.icon-back {
+    display: none;
+}
+
+.search-toggle.active svg.icon-search {
+    display: none;
+}
+
+.search-toggle.active svg.icon-back {
+    display: block;
+}
+
+/* ========== Мобільний пошук (поверх хедера) ========== */
+@media (max-width: 767.98px) {
+    .search-wrapper {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 10px 15px;
+        background: #000;
+        z-index: 2000;
+    }
+
+    .search-wrapper.show {
+        display: flex !important;
+    }
+}
+
+.search-back-btn {
+    z-index: 10;
+    top: 10px; /* відступ від верху */
+    left: 10px; /* відступ від лівого краю */
+    background: none;
+    color: white;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* ========== Кнопки та текст справа ========== */
+.username {
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.register-text {
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.register-text:hover {
+    color: #636363 !important;
+}
+
+.btn-primary-custom {
+    background: #fff !important;
+    border: none !important;
+    border-radius: 25px !important;
+    color: #000 !important;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 8px 20px;
+    min-width: 100px;
+    transition: all 0.2s;
+}
+
+.btn-primary-custom:hover,
+.btn-primary-custom:focus {
+    background: #636363 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+.btn-outline-light {
+    border: 1px solid #fff;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 25px;
+    padding: 8px 20px;
+    min-width: 100px;
+    transition: all 0.2s;
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus {
+    background: #636363;
+    border-color: #636363;
+    color: #fff;
+}
+
+/* ========== Адаптив ========== */
+@media (max-width: 575.98px) {
+    .header {
+        height: var(--header-height);
+    }
+
+    .logo {
+        margin-left: var(--logo-left) !important;
+        width: 35px !important;
+        height: 33px !important;
+    }
+
+    .site-name {
+        font-size: 1rem;
+    }
+
+    .menu-toggle {
+        width: 24px;
+        height: 18px;
+    }
+
+    .navbar-toggler-icon-custom span {
+        height: 2.5px;
+    }
+
+    .btn-primary-custom {
+        font-size: 0.75rem;
+        padding: 6px 15px;
+        min-width: 80px;
+    }
+
+    .register-text {
+        display: none !important;
+    }
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .header {
+        height: var(--header-height);
+    }
+
+    .logo {
+        margin-left: var(--logo-left) !important;
+        width: 40px !important;
+        height: 38px !important;
+    }
+
+    .site-name {
+        font-size: 1.1rem;
+    }
+
+    .menu-toggle {
+        width: 26px;
+        height: 20px;
+    }
+
+    .navbar-toggler-icon-custom span {
+        height: 3px;
+    }
+
+    .btn-primary-custom {
+        font-size: 0.8rem;
+        padding: 6px 15px;
+        min-width: 90px;
+    }
+}
+
+@media (min-width: 768px) {
+    .header {
+        height: var(--header-height);
+    }
+
+    .logo {
+        margin-left: var(--logo-left) !important;
+        width: 49px !important;
+        height: 47px !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .logo {
+        margin-left: var(--logo-left) !important;
+    }
+
+    .search-wrapper {
+        max-width: 350px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .logo {
+        margin-left: var(--logo-left) !important;
+    }
+
+    .search-wrapper {
+        max-width: 400px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) and (orientation: portrait) {
+    .logo {
+        margin-left: var(--logo-left) !important;
+    }
+    .search-wrapper {
+        max-width: 300px;
+    }
+
+    .search-input {
+        font-size: 0.8rem;
+    }
+}
+
+/* --- Позиціонування іконки всередині mobile-search --- */
+.mobile-search .search-icon-wrapper {
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 6;
+    border: none;
+    background: none;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #aaa;
+}
+
+/* Розміри svg */
+.mobile-search .search-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* За замовчуванням показуємо лупу, ховаємо back */
+.mobile-search .icon-back {
+    display: none;
+}
+
+.mobile-search .icon-search {
+    display: block;
+}
+
+/* Коли мобільний пошук має клас .open — показуємо стрілку, ховаємо лупу */
+.mobile-search.open .icon-search {
+    display: none;
+}
+
+.mobile-search.open .icon-back {
+    display: block;
+}
+
+/* Зробити placeholder світлим (щоб було видно на темному фоні) */
+.mobile-search .search-input::placeholder {
+    color: #bdbdbd;
+    opacity: 1;
+}
+
+/* Налаштовуємо вертикальний відступ — змінюй value тут */
+.mobile-search {
+    /* приклад: 8px відступ від верху (змінюй за потреби) */
+    margin-top: 8px;
+}
+
+/* Видимість: ми все ще керуємо показом через inline style та .open,
+   але можна додати це як резерв: */
+.mobile-search {
+    display: none;
+}
+
+.mobile-search.open {
+    display: block;
+}
+
+/*Навбар*/
+
+.sidebar {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 250px;
+    background: #111;
+    color: #fff;
+    transition: width 0.3s;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+.sidebar.collapsed {
+    width: var(--sidebar-width);
+}
+
+.sidebar .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar .sidebar-menu li {
+    margin: 0 10px;
+}
+
+.sidebar .sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.sidebar .sidebar-menu li a .text {
+    margin-left: 10px;
+    transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .sidebar-menu li a .text {
+    opacity: 0;
+}
+
+.sidebar .sidebar-menu li a:hover {
+    color: #636363;
+}
+
+.sidebar-bottom-text {
+    position: absolute;
+    bottom: 100px;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: #fff;
+    text-align: center;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.sidebar.collapsed .sidebar-bottom-text {
+    opacity: 0;
+}
+
+/* Основний контент з відступом */
+.main-content {
+    margin-left: 250px;
+    transition: margin-left 0.3s;
+}
+
+.sidebar.collapsed ~ .main-content {
+    margin-left: 80px;
 }
