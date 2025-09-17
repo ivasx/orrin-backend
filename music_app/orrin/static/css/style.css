@@ -1,23 +1,27 @@
+/* ========== ІМПОРТИ ========== */
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
-/* ========== Глобальні змінні ========== */
+/* ========== ЗМІННІ ========== */
 :root {
+    /* Header */
     --header-height: 70px;
 
+    /* Burger menu */
     --burger-height: 22px;
+    --burger-width: 30px;
     --burger-top: calc(var(--header-height) / 2 - var(--burger-height) / 2);
     --burger-left: var(--burger-top);
-    --burger-width: 30px;
     --burger-right: var(--burger-left);
 
-    --logo-left: var(--sidebar-width);
+    /* Sidebar */
     --sidebar-width: calc(var(--burger-left) + var(--burger-width) + var(--burger-right));
 
+    /* ВИПРАВЛЕННЯ: Фіксована позиція лого на рівні згорнутого сайдбару */
+    --logo-left: 80px;
 }
 
-
-/* ========== Глобальні стилі ========== */
+/* ========== БАЗОВІ СТИЛІ ========== */
 * {
     box-sizing: border-box;
 }
@@ -27,28 +31,11 @@ html, body {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
-    background: #918f8f;
+    background: #151515;
     color: #fff;
 }
 
-
-/* ========== Header ========== */
-:root {
-    --header-height: 70px;
-}
-
-.header .container-fluid,
-.header .row {
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-}
-
-.header .container-fluid,
-.header .row {
-    height: 100%;
-    margin: 0;
-}
-
+/* ========== HEADER ========== */
 .header {
     position: fixed;
     top: 0;
@@ -57,7 +44,16 @@ html, body {
     height: var(--header-height);
     z-index: 1200;
 }
-/* ========== Бургер-меню ========== */
+
+.header .container-fluid,
+.header .row {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    height: 100%;
+    margin: 0;
+}
+
+/* ========== BURGER MENU ========== */
 .menu-toggle {
     position: absolute;
     right: var(--burger-right);
@@ -96,10 +92,10 @@ html, body {
     background: #636363;
 }
 
-
-/* ========== Логотип + назва ========== */
+/* ========== ЛОГОТИП ========== */
 .logo {
     transition: transform 0.2s, opacity 0.2s;
+    margin-left: var(--logo-left) !important;
 }
 
 .site-name {
@@ -109,42 +105,18 @@ html, body {
     white-space: nowrap;
 }
 
-/* ========== Пошук (десктоп) ========== */
+/* ========== ПОШУК (ДЕСКТОП) ========== */
 .search-wrapper {
     display: flex;
     position: relative;
-    max-width: 400px;
+    max-width: 600px;
     width: 100%;
-}
-
-.search-icon-wrapper {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    width: 24px;
-    height: 24px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    color: #636363;
-}
-
-.search-icon {
-    width: 20px;
-    height: 20px;
-}
-
-.search-icon-wrapper:hover {
-    color: #fff;
+    /* ВИПРАВЛЕННЯ: Додаємо відступ від лого */
+    margin-left: 70px;
 }
 
 .search-input {
+    width: 100%;
     background: #272727;
     border: 1px solid transparent;
     border-radius: 10px;
@@ -173,19 +145,72 @@ html, body {
     opacity: 1;
 }
 
+/* Прибираємо стандартні кнопки очищення */
 input[type="search"]::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 input[type="search"]::-moz-search-clear {
     display: none;
+    width: 0;
+    height: 0;
 }
 
 input[type="search"]::-ms-clear {
     display: none;
+    width: 0;
+    height: 0;
 }
 
+/* Додатково для Webkit */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+}
+
+/* Прибираємо outline та інші стандартні стилі */
+.search-input,
+.mobile-search .search-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+/* Іконка пошуку */
+.search-icon-wrapper {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #636363;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.search-icon-wrapper:hover {
+    color: #fff;
+}
+
+/* Кнопка очищення пошуку */
 .search-clear-btn {
     position: absolute;
     right: 10px;
@@ -204,7 +229,7 @@ input[type="search"]::-ms-clear {
     color: #fff;
 }
 
-/* ========== Кнопка-лупа ========== */
+/* ========== КНОПКА-ЛУПА (МОБІЛЬНА) ========== */
 .search-toggle {
     border: none;
     background: none;
@@ -243,6 +268,7 @@ input[type="search"]::-ms-clear {
     transform: translate(-50%, -50%);
 }
 
+/* Стани іконок */
 .search-toggle svg.icon-search {
     display: block;
 }
@@ -259,28 +285,148 @@ input[type="search"]::-ms-clear {
     display: block;
 }
 
-/* ========== Мобільний пошук (поверх хедера) ========== */
-@media (max-width: 767.98px) {
-    .search-wrapper {
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        padding: 10px 15px;
-        background: #000;
-        z-index: 2000;
-    }
+/* ========== МОБІЛЬНИЙ ПОШУК - ПОВНЕ ВИПРАВЛЕННЯ ========== */
+.mobile-search {
+    /* ГОЛОВНЕ ВИПРАВЛЕННЯ: повна ізоляція від батьківських контейнерів */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100vw !important;
+    height: var(--header-height) !important;
+    background: #000 !important;
+    z-index: 2500 !important; /* Збільшуємо z-index */
 
-    .search-wrapper.show {
-        display: flex !important;
-    }
+    /* Повне центрування через flexbox */
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    /* Скидаємо всі можливі відступи */
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+
+    /* Прибираємо вплив Bootstrap */
+    box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
+.mobile-search.open {
+    display: flex !important;
+}
+
+/* Контейнер для форми - тепер просто обгортка без додаткових стилів */
+.mobile-search .container-fluid {
+    all: unset !important; /* Скидаємо всі Bootstrap стилі */
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 20px !important; /* Тільки бокові відступи для безпеки */
+}
+
+/* Форма пошуку */
+.mobile-search .search-form {
+    all: unset !important;
+    width: 100% !important;
+    max-width: 350px !important; /* Максимальна ширина */
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Контейнер для input */
+.mobile-search .position-relative {
+    position: relative !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Поле вводу */
+.mobile-search .search-input {
+    width: 100% !important;
+    height: 40px !important;
+    background: #272727 !important;
+    border: 1px solid transparent !important;
+    border-radius: 10px !important;
+    color: #636363 !important;
+    font-weight: 500 !important;
+    font-size: 16px !important; /* Збільшуємо для iOS */
+    padding-left: 45px !important;
+    padding-right: 45px !important;
+    transition: border-color 0.2s !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    outline: none !important;
+}
+
+.mobile-search .search-input:focus {
+    background-color: #272727 !important;
+    border-color: #fff !important;
+    color: #636363 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.mobile-search .search-input::placeholder {
+    color: #636363 !important;
+    opacity: 1 !important;
+}
+
+/* Кнопка назад */
+.mobile-search .search-back-btn {
+    position: absolute !important;
+    left: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 10 !important;
+    border: none !important;
+    background: none !important;
+    padding: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    color: #fff !important;
+}
+
+.mobile-search .search-back-btn:hover {
+    color: #636363 !important;
+}
+
+/* Кнопка очищення в мобільному пошуку */
+.mobile-search .search-clear-btn {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    border: none !important;
+    background: none !important;
+    color: #636363 !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    display: none !important;
+    z-index: 10 !important;
+    width: 24px !important;
+    height: 24px !important;
+    line-height: 1 !important;
+}
+
+/* Видаляємо дублікат */
 .search-back-btn {
     z-index: 10;
-    top: 10px; /* відступ від верху */
-    left: 10px; /* відступ від лівого краю */
+    top: 10px;
+    left: 10px;
     background: none;
     color: white;
     border: none;
@@ -291,7 +437,7 @@ input[type="search"]::-ms-clear {
     cursor: pointer;
 }
 
-/* ========== Кнопки та текст справа ========== */
+/* ========== КНОПКИ СПРАВА ========== */
 .username {
     font-weight: 500;
     font-size: 0.875rem;
@@ -345,196 +491,25 @@ input[type="search"]::-ms-clear {
     color: #fff;
 }
 
-/* ========== Адаптив ========== */
-@media (max-width: 575.98px) {
-    .header {
-        height: var(--header-height);
-    }
-
-    .logo {
-        margin-left: var(--logo-left) !important;
-        width: 35px !important;
-        height: 33px !important;
-    }
-
-    .site-name {
-        font-size: 1rem;
-    }
-
-    .menu-toggle {
-        width: 24px;
-        height: 18px;
-    }
-
-    .navbar-toggler-icon-custom span {
-        height: 2.5px;
-    }
-
-    .btn-primary-custom {
-        font-size: 0.75rem;
-        padding: 6px 15px;
-        min-width: 80px;
-    }
-
-    .register-text {
-        display: none !important;
-    }
-}
-@media (min-width: 576px) and (max-width: 767.98px) {
-    .header {
-        height: var(--header-height);
-    }
-
-    .logo {
-        margin-left: var(--logo-left) !important;
-        width: 40px !important;
-        height: 38px !important;
-    }
-
-    .site-name {
-        font-size: 1.1rem;
-    }
-
-    .menu-toggle {
-        width: 26px;
-        height: 20px;
-    }
-
-    .navbar-toggler-icon-custom span {
-        height: 3px;
-    }
-
-    .btn-primary-custom {
-        font-size: 0.8rem;
-        padding: 6px 15px;
-        min-width: 90px;
-    }
-}
-
-@media (min-width: 768px) {
-    .header {
-        height: var(--header-height);
-    }
-
-    .logo {
-        margin-left: var(--logo-left) !important;
-        width: 49px !important;
-        height: 47px !important;
-    }
-}
-
-@media (min-width: 992px) {
-    .logo {
-        margin-left: var(--logo-left) !important;
-    }
-
-    .search-wrapper {
-        max-width: 350px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .logo {
-        margin-left: var(--logo-left) !important;
-    }
-
-    .search-wrapper {
-        max-width: 400px;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1199.98px) and (orientation: portrait) {
-    .logo {
-        margin-left: var(--logo-left) !important;
-    }
-    .search-wrapper {
-        max-width: 300px;
-    }
-
-    .search-input {
-        font-size: 0.8rem;
-    }
-}
-
-/* --- Позиціонування іконки всередині mobile-search --- */
-.mobile-search .search-icon-wrapper {
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 6;
-    border: none;
-    background: none;
-    padding: 0;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #aaa;
-}
-
-/* Розміри svg */
-.mobile-search .search-icon {
-    width: 20px;
-    height: 20px;
-}
-
-/* За замовчуванням показуємо лупу, ховаємо back */
-.mobile-search .icon-back {
-    display: none;
-}
-
-.mobile-search .icon-search {
-    display: block;
-}
-
-/* Коли мобільний пошук має клас .open — показуємо стрілку, ховаємо лупу */
-.mobile-search.open .icon-search {
-    display: none;
-}
-
-.mobile-search.open .icon-back {
-    display: block;
-}
-
-/* Зробити placeholder світлим (щоб було видно на темному фоні) */
-.mobile-search .search-input::placeholder {
-    color: #bdbdbd;
-    opacity: 1;
-}
-
-/* Налаштовуємо вертикальний відступ — змінюй value тут */
-.mobile-search {
-    /* приклад: 8px відступ від верху (змінюй за потреби) */
-    margin-top: 8px;
-}
-
-/* Видимість: ми все ще керуємо показом через inline style та .open,
-   але можна додати це як резерв: */
-.mobile-search {
-    display: none;
-}
-
-.mobile-search.open {
-    display: block;
-}
-
-/*Навбар*/
-
+/* ========== SIDEBAR ========== */
 .sidebar {
     position: fixed;
     top: var(--header-height);
     left: 0;
     display: flex;
     flex-direction: column;
+    border-right: 1px solid #ffffff;
     height: 100%;
     width: 250px;
-    background: #111;
+    background: #000000;
     color: #fff;
     transition: width 0.3s;
     overflow: hidden;
     z-index: 1000;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-width);
 }
 
 .sidebar-menu {
@@ -542,15 +517,6 @@ input[type="search"]::-ms-clear {
     padding: 0;
     margin: 0;
     flex-grow: 1;
-}
-.sidebar.collapsed {
-    width: var(--sidebar-width);
-}
-
-.sidebar .sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
 }
 
 .sidebar .sidebar-menu li {
@@ -601,7 +567,7 @@ input[type="search"]::-ms-clear {
     opacity: 0;
 }
 
-/* Основний контент з відступом */
+/* ========== ОСНОВНИЙ КОНТЕНТ ========== */
 .main-content {
     margin-left: 250px;
     transition: margin-left 0.3s;
@@ -609,4 +575,273 @@ input[type="search"]::-ms-clear {
 
 .sidebar.collapsed ~ .main-content {
     margin-left: 80px;
+}
+
+/* ========== КАРТКА ТРЕКУ ========== */
+.card-track {
+    width: 320px;
+    height: 50px;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.track-cover {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    flex: 1;
+    gap: 2px;
+    margin-left: 10px;
+    position: relative;
+}
+
+.track-title {
+    margin: 0;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1;
+}
+
+.track-artist {
+    margin: 0;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #aaa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1;
+}
+.track-duration {
+    position: absolute;
+    right: 0;               /* прижимає до правого краю */
+    top: 50%;               /* по вертикалі посередині */
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    color: #aaa;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.track-cover-wrapper {
+    position: relative; /* трикутник позиціонується відносно картинки */
+    width: 50px;
+    height: 50px;
+}
+
+.track-cover-wrapper img.track-cover {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    object-fit: cover;
+    transition: filter 0.2s;
+}
+
+.track-cover-wrapper .play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid #fff;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    opacity: 0; /* спочатку сховано */
+    transition: opacity 0.2s;
+}
+
+.card-track:hover .track-cover-wrapper img.track-cover {
+    filter: brightness(0.4);
+}
+
+.card-track:hover .track-cover-wrapper .play-icon {
+    opacity: 0.8; /* показати при hover */
+}
+
+.play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid #fff;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    opacity: 0.8;
+}
+
+/* ========== МЕДІА ЗАПИТИ ========== */
+@media (max-width: 320px) {
+    .mobile-search .search-form {
+        max-width: 260px !important;
+    }
+}
+
+/* Мобільні пристрої (до 576px) */
+@media (max-width: 575.98px) {
+    .header {
+        height: var(--header-height);
+    }
+
+    .logo {
+        width: 40px !important;
+        height: 38px !important;
+    }
+
+    .site-name {
+        font-size: 1rem;
+    }
+
+    .menu-toggle {
+        width: 24px;
+        height: 18px;
+    }
+
+    .navbar-toggler-icon-custom span {
+        height: 2.5px;
+    }
+
+    .btn-primary-custom {
+        font-size: 0.75rem;
+        padding: 6px 15px;
+        min-width: 80px;
+    }
+
+    .register-text {
+        display: none !important;
+    }
+
+    .search-wrapper {
+        display: none;
+    }
+
+    .mobile-search .container-fluid {
+        padding: 0 15px !important;
+    }
+
+    .mobile-search .search-form {
+        max-width: 280px !important;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .mobile-search .search-form {
+        max-width: 350px !important;
+    }
+}
+
+/* Планшети (576px - 768px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .header {
+        height: var(--header-height);
+    }
+
+    .logo {
+        width: 40px !important;
+        height: 38px !important;
+    }
+
+    .site-name {
+        font-size: 1.1rem;
+    }
+
+    .menu-toggle {
+        width: 26px;
+        height: 20px;
+    }
+
+    .navbar-toggler-icon-custom span {
+        height: 3px;
+    }
+
+    .btn-primary-custom {
+        font-size: 0.8rem;
+        padding: 6px 15px;
+        min-width: 90px;
+    }
+
+    .search-wrapper {
+        display: none;
+    }
+
+    .mobile-search .container-fluid {
+        padding: 0 20px !important;
+    }
+
+    .mobile-search .search-form {
+        max-width: 400px !important;
+    }
+}
+
+/* Десктоп (768px+) */
+@media (min-width: 768px) {
+    .header {
+        height: var(--header-height);
+    }
+
+    .logo {
+        width: 49px !important;
+        height: 47px !important;
+    }
+
+    /* На десктопі мобільний пошук взагалі приховуємо */
+    .mobile-search {
+        display: none !important;
+    }
+}
+
+/* Великі екрани (992px+) */
+@media (min-width: 992px) {
+    .search-wrapper {
+        max-width: 350px;
+    }
+}
+
+/* Дуже великі екрани (1200px+) */
+@media (min-width: 1200px) {
+    .search-wrapper {
+        max-width: 400px;
+    }
+}
+
+/* Планшети в портретному режимі */
+@media (min-width: 768px) and (max-width: 1199.98px) and (orientation: portrait) {
+    .search-wrapper {
+        max-width: 300px;
+    }
+
+    .search-input {
+        font-size: 0.8rem;
+    }
+}
+
+/* Додатковий стиль для iOS */
+@media (max-width: 767px) {
+    .mobile-search .search-input {
+        font-size: 16px !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+    }
 }

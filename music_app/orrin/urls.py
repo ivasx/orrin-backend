@@ -9,6 +9,7 @@ from .views import HomeView
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
+path('track/<slug:slug>/', views.TrackDetailView.as_view(), name='track_detail'),
 ]
 
 if settings.DEBUG:

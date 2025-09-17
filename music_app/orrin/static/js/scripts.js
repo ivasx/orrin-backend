@@ -1,58 +1,3 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const toggleBtn = document.querySelector('.search-toggle'); // іконка в хедері (праворуч)
-    const mobileSearch = document.querySelector('.mobile-search');
-    if (!toggleBtn || !mobileSearch) return;
-
-    const backBtn = mobileSearch.querySelector('.search-back-btn'); // кнопка назад
-    const searchInput = mobileSearch.querySelector('.search-input');
-
-    function openMobileSearch() {
-        mobileSearch.style.display = 'block';
-        setTimeout(() => mobileSearch.classList.add('open'), 10);
-        toggleBtn.classList.add('active'); // змінюємо іконку на стрілку
-        if (searchInput) searchInput.focus();
-    }
-
-    function closeMobileSearch() {
-        mobileSearch.classList.remove('open');
-        toggleBtn.classList.remove('active');
-        setTimeout(() => {
-            if (!mobileSearch.classList.contains('open')) {
-                mobileSearch.style.display = 'none';
-            }
-        }, 150);
-    }
-
-    toggleBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        const isVisible = getComputedStyle(mobileSearch).display !== 'none' && mobileSearch.classList.contains('open');
-        if (isVisible) closeMobileSearch(); else openMobileSearch();
-    });
-
-    if (backBtn) {
-        backBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            closeMobileSearch();
-        });
-    }
-
-    document.addEventListener('click', function (e) {
-        if (getComputedStyle(mobileSearch).display !== 'none' &&
-            !mobileSearch.contains(e.target) &&
-            !toggleBtn.contains(e.target)) {
-            closeMobileSearch();
-        }
-    });
-
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeMobileSearch();
-    });
-
-    window.addEventListener('resize', function () {
-        if (window.innerWidth >= 768) closeMobileSearch();
-    });
-});
-
 document.addEventListener('DOMContentLoaded', function() {
     const searchInputs = document.querySelectorAll('.search-input');
 
@@ -85,3 +30,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+            const searchToggle = document.querySelector('.search-toggle');
+            const mobileSearch = document.getElementById('mobileSearch');
+            const searchBackBtn = document.querySelector('.search-back-btn');
+            const mobileSearchInput = document.querySelector('.mobile-search .search-input');
+
+            // Відкрити мобільний пошук
+            searchToggle.addEventListener('click', function() {
+                mobileSearch.classList.add('open');
+                // Фокус на поле після анімації
+                setTimeout(() => {
+                    mobileSearchInput.focus();
+                }, 100);
+            });
+
+            // Закрити мобільний пошук
+            searchBackBtn.addEventListener('click', function() {
+                mobileSearch.classList.remove('open');
+            });
+
+            // Закрити на ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileSearch.classList.contains('open')) {
+                    mobileSearch.classList.remove('open');
+                }
+            });
+        });

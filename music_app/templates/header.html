@@ -56,6 +56,7 @@
                               fill="none" stroke="currentColor" stroke-width="2"/>
                     </svg>
                 </button>
+
                 {% if user.is_authenticated %}
                 <span class="username text-white me-3 d-none d-sm-inline">{{ user.username }}</span>
                 <form method="POST" action="{% url 'logout' %}">
@@ -71,23 +72,17 @@
     </div>
 
     <!-- Мобільний пошук (з'являється при натисканні на іконку лупи) -->
-    <div class="mobile-search d-md-none" style="display: none;">
-        <div class="container-fluid px-3 py-2">
+    <div class="mobile-search" id="mobileSearch">
+        <div class="container-fluid">
             <form class="search-form" method="GET" action="">
                 <div class="position-relative">
-                    <!-- Кнопка назад -->
-                    <button type="button" class="btn search-back-btn position-absolute">
+                    <button type="button" class="search-back-btn">
                         <svg class="search-icon" viewBox="0 0 24 24">
                             <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </button>
 
-                    <!-- Поле вводу -->
-                    <input type="search"
-                           name="q"
-                           placeholder="Що хочете послухати?"
-                           class="form-control search-input ps-5"
-                           value="{{ request.GET.q|default:'' }}">
+                    <input type="search" name="q" placeholder="Що хочете послухати?" class="search-input" value="">
 
                     <button type="button" class="search-clear-btn">&times;</button>
                 </div>
