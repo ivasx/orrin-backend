@@ -43,41 +43,8 @@ class Track(models.Model):
                 num += 1
             self.slug = slug
 
-        # Зберегіється об'єкт щоб він гарантовано існував
-        is_new = self.pk is None
+
         super().save(*args, **kwargs)
-
-
-        should_calculate = False
-
-        if is_new and self.audio:
-            should_calculate = True
-        elif self.audio:
-            try:
-                old_instance = Track.objects.get(pk=self.pk)
-                if old_instance.audio != self.audio:
-                    should_calculate = True
-            except Track.DoesNotExist:
-                should_calculate = True
-
-        if should_calculate:
-            file_path = os.path.join(settings.MEDIA_ROOT, self.audio.name)
-            if os.path.exists(file_path):
-                try:
-                    audio_file = File(file_path)
-                    if audio_file and audio_file.info:
-                        self.duration = int(audio_file.info.length)
-                    else:
-                        self.duration = 0
-                except Exception as e:
-                    print(f"Помилка mutagen при обробці {file_path}: {e}")
-                    self.duration = 0
-            else:
-                print(f"Файл не знайдено за шляхом: {file_path}")
-                self.duration = 0
-
-
-            super().save(update_fields=["duration"])
 
 
     def delete(self, *args, **kwargs):
