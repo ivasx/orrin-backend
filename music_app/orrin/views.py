@@ -1,22 +1,28 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
+import os
 
-from orrin.models import Track
+from django.conf import settings
+from django.http import FileResponse
+from django.views import View
+from rest_framework import generics
 
-
-# Create your views here.
-class HomeView(TemplateView):
-    template_name = 'orrin/test.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tracks'] = Track.objects.all()[:20]
-        return context
+from .models import Track
+from .serializers import TrackSerializer
 
 
-class TrackDetailView(TemplateView):
-    model = Track
+class TrackAPIView(generics.ListAPIView):
+    queryset = Track.objects.all()
+    serializer_class = TrackSerializer
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+
+class TrackDetailAPIView(generics.RetrieveAPIView):
+    queryset = Track.objects.all()
+    serializer_class = TrackSerializer
+    lookup_field = 'slug'
+
+
+class ServeAudioView(View):
+    def get(self, request, path):
+        file_path = os.path.join(settings.MEDIA_ROOT, 'audio', path)
+        response = FileResponse(open(file_path, 'rb'))
+        response['Accept-Ranges'] = 'bytes'
+        return response

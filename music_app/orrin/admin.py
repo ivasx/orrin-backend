@@ -9,4 +9,4 @@ class TrackAdmin(admin.ModelAdmin):
     fields = ('title', 'slug', 'artist', 'cover', 'audio', 'duration')
     list_display = ('title', 'artist', 'cover', 'duration', 'slug')
     list_display_links = ('title',)
-    readonly_fields = ('slug',)
+    readonly_fields = ('slug', 'duration')

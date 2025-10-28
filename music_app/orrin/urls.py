@@ -1,15 +1,15 @@
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
-from django.urls import path
+from django.urls import path, re_path
 
 from music_app import settings
 from . import views
-from .views import HomeView
+from .views import TrackAPIView
 
 urlpatterns = [
-    path('', HomeView.as_view(), name='home'),
-    path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
-path('track/<slug:slug>/', views.TrackDetailView.as_view(), name='track_detail'),
+    path('api/v1/tracks/', TrackAPIView.as_view()),
+    path('api/v1/tracks/<slug:slug>', views.TrackDetailAPIView.as_view()),
+    re_path(r'^media/audio/(?P<path>.+)$', views.ServeAudioView.as_view(), name='serve-audio')
 ]
 
 if settings.DEBUG:
