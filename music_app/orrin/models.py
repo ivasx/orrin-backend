@@ -1,3 +1,4 @@
+from django.core.files.storage import default_storage
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
@@ -43,6 +44,12 @@ class Track(models.Model):
                 num += 1
             self.slug = slug
 
+        if self.cover:
+            file_name = self.cover.name
+            if default_storage.exists(file_name):
+                self.cover.name = file_name
+            else:
+                pass
 
         super().save(*args, **kwargs)
 
