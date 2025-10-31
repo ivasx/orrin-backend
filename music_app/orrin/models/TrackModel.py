@@ -1,16 +1,25 @@
+import os
 from django.core.files.storage import default_storage
 from django.db import models
 from django.urls import reverse
-from django.conf import settings
 from slugify import slugify
-from mutagen import File
-import os
+from orrin.models import Artist
 
 
 class Track(models.Model):
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Слаг')
-    title = models.CharField(max_length=255, verbose_name='Назва')  # Збільшено довжину
-    artist = models.CharField(max_length=255, verbose_name='Виконавець')  # Збільшено довжину
+    """
+    Represents a music track with metadata and media files.
+
+    The class is a Django model used to define and handle the metadata and
+    media files associated with a music track. It includes fields for storing
+    the title, artist, cover image, and audio file. It also defines utilities
+    to manage the object's slug, formatted duration, absolute URL, and safe
+    deletion of its media files.
+    """
+
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
+    title = models.CharField(max_length=255, verbose_name='Title')
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, verbose_name='Artist', related_name='tracks')
     cover = models.ImageField(upload_to='images/covers/', blank=True, null=True, verbose_name='Обкладинка')
     audio = models.FileField(upload_to='audio/', blank=True, null=True, verbose_name='Аудіо файл')
 
@@ -34,7 +43,7 @@ class Track(models.Model):
         return reverse('track-detail-api', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
-        # Якщо слагу нема він створюється
+        # If slug is not provided, generate it from title and artist
         if not self.slug:
             base_slug = slugify(f'{self.title}-{self.artist}')
             slug = base_slug
