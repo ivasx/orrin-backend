@@ -1,17 +1,19 @@
 from django.db import models
+from .SluggedModel import SluggedModel
 
 
-class Artist(models.Model):
+class Artist(SluggedModel):
     """
     Represents an artist entity, which can be either a solo performer, a music group, or a band member.
     """
+
     ARTIST_TYPE_CHOICES  = (
         ('group', 'Group'),
         ('person', 'Person'),
     )
 
     type = models.CharField(max_length=10, choices=ARTIST_TYPE_CHOICES, default='person', verbose_name='Type')
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
+    # slug = generated in the base class SluggedModel
 
     name = models.CharField(max_length=255, verbose_name='Name')
     mini_description = models.CharField(max_length=255, blank=True, null=True, verbose_name='Short description or tagline')
@@ -24,8 +26,9 @@ class Artist(models.Model):
     join_date = models.CharField(max_length=50, blank=True, null=True, verbose_name='Join date (Start career)')
     socials = models.JSONField(default=dict, blank=True)
 
+    slug_source_fields = ['name']
     def __str__(self):
-        return f'{self.name} - {self.mini_description}'
+        return f'{self.name}'
 
 
 

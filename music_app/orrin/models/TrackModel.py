@@ -2,11 +2,10 @@ import os
 from django.core.files.storage import default_storage
 from django.db import models
 from django.urls import reverse
-from slugify import slugify
-from orrin.models import Artist
+from .SluggedModel import SluggedModel
 
 
-class Track(models.Model):
+class Track(SluggedModel):
     """
     Represents a music track with metadata and media files.
 
@@ -17,17 +16,18 @@ class Track(models.Model):
     deletion of its media files.
     """
 
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='Slug')
+    # slug = generated in the base class SluggedModel
     title = models.CharField(max_length=255, verbose_name='Title')
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, verbose_name='Artist', related_name='tracks')
-    cover = models.ImageField(upload_to='images/covers/', blank=True, null=True, verbose_name='Обкладинка')
-    audio = models.FileField(upload_to='audio/', blank=True, null=True, verbose_name='Аудіо файл')
-
+    artist = models.ForeignKey('Artist', on_delete=models.CASCADE, verbose_name='Artist', related_name='tracks')
+    cover = models.ImageField(upload_to='images/covers/', blank=True, null=True, verbose_name='Cover image')
+    audio = models.FileField(upload_to='audio/', blank=True, null=True, verbose_name='Audio file')
     duration = models.PositiveIntegerField(
         help_text="Тривалість треку у секундах",
         blank=True, default=0, null=True,
         verbose_name='Тривалість',
     )
+
+    slug_source_fields = ['title', 'artist']
 
     def __str__(self):
         return f'{self.title} - {self.artist}'
@@ -43,16 +43,6 @@ class Track(models.Model):
         return reverse('track-detail-api', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
-        # If slug is not provided, generate it from title and artist
-        if not self.slug:
-            base_slug = slugify(f'{self.title}-{self.artist}')
-            slug = base_slug
-            num = 1
-            while Track.objects.filter(slug=slug).exists():
-                slug = f'{base_slug}-{num}'
-                num += 1
-            self.slug = slug
-
         if self.cover:
             file_name = self.cover.name
             if default_storage.exists(file_name):

@@ -1,14 +1,18 @@
 from django.conf.urls.static import static
-from django.contrib.auth.views import LogoutView
-from django.urls import path, re_path
+from django.urls import path, re_path, include
+from rest_framework import routers
 
 from music_app import settings
 from . import views
-from .views import TrackAPIView
+
+
+router = routers.SimpleRouter()
+router.register(r'tracks', views.TrackViewSet)
+router.register(r'artists', views.ArtistViewSet)
 
 urlpatterns = [
-    path('api/v1/tracks/', TrackAPIView.as_view()),
-    path('api/v1/tracks/<slug:slug>', views.TrackDetailAPIView.as_view()),
+    path('api/v1/', include(router.urls)),
+
     re_path(r'^media/audio/(?P<path>.+)$', views.ServeAudioView.as_view(), name='serve-audio')
 ]
 

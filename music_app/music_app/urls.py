@@ -17,8 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from orrin.views import TrackAPIView
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('orrin.urls')),

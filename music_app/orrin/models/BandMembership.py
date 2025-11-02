@@ -1,5 +1,5 @@
 from django.db import models
-from orrin.models import Artist
+from ..models import Artist
 
 
 class BandMembership(models.Model):
@@ -20,7 +20,7 @@ class BandMembership(models.Model):
     role = models.CharField(max_length=255, verbose_name='Role')
 
     class Meta:
-        unique_together = ('artist', 'group')
+        unique_together = ('member', 'group')
 
     def __str__(self):
         return f'{self.member.name} - {self.role} in {self.group}'

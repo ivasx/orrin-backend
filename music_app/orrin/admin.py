@@ -1,15 +1,13 @@
 import os
-
 from django.contrib import admin
 from mutagen import File
+from .models import Track, Artist
 
-from orrin.models import Track
 
-
-# Register your models here.
 @admin.register(Track)
 class TrackAdmin(admin.ModelAdmin):
     fields = ('title', 'slug', 'artist', 'cover', 'audio', 'duration')
+    autocomplete_fields = ['artist']
     list_display = ('title', 'artist', 'cover', 'duration', 'slug')
     list_display_links = ('title',)
     readonly_fields = ('slug', 'duration')
@@ -25,3 +23,13 @@ class TrackAdmin(admin.ModelAdmin):
                     obj.save(update_fields=['duration'])
             except Exception as e:
                 print(f"Помилка при розрахунку тривалості: {e}")
+
+
+@admin.register(Artist)
+class ArtistAdmin(admin.ModelAdmin):
+    fields = ('name', 'slug')
+    list_display = ('name', 'slug')
+    list_display_links = ('name',)
+    readonly_fields = ('slug',)
+
+    search_fields = ['name']
