@@ -1,10 +1,13 @@
 from rest_framework import serializers
+
+from .ArtistSerializer import ArtistSerializer
 from ..models import Track
 
 class TrackSerializer(serializers.ModelSerializer):
     audio_url = serializers.SerializerMethodField()
     cover_url = serializers.SerializerMethodField()
     duration_formatted = serializers.CharField(read_only=True)
+    artist = ArtistSerializer(read_only=True)
 
     class Meta:
         model = Track
