@@ -8,4 +8,13 @@ class ArtistSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'slug',
+            'type',
+            'genres',
+            'about',
+            'history',
+            'location',
+            'join_date',
+            'monthly_listeners',
+            'image',
+            'socials',
         )
