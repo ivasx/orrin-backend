@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Cервіс Django-додатку
   web:
     build: .
     container_name: orrin_backend
@@ -16,7 +15,6 @@ services:
       db:
         condition: service_healthy
 
-  # Сервіс бази даних
   db:
     image: postgres:16-alpine
     container_name: orrin_database
