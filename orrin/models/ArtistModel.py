@@ -24,7 +24,7 @@ class Artist(SluggedModel):
 
     name = models.CharField(max_length=255, verbose_name='Name')
     mini_description = models.CharField(max_length=255, blank=True, null=True, verbose_name='Short description or tagline')
-    genres = models.ManyToManyField('Genre', related_name='artists', verbose_name='Genres')
+    genres = models.ManyToManyField('Genre', related_name='artists', verbose_name='Genres', blank=True)
     monthly_listeners = models.PositiveIntegerField(default=0, verbose_name='Number of listeners per month')
     image = models.ImageField(upload_to='images/artists/', blank=True, null=True, verbose_name='Photo')
     about = models.TextField(blank=True, null=True, verbose_name='About')
