@@ -5,7 +5,7 @@ from django.db.models import Q
 User = get_user_model()
 
 
-class UsernameOrEmailModelBackend(ModelBackend):
+class EmailOrUsernameModelBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         login_field = username or kwargs.get(User.USERNAME_FIELD)
 

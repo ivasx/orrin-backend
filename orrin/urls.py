@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, re_path, include
 from rest_framework import routers
 
-from music_app import settings
 from . import views
 
 router = routers.SimpleRouter()
