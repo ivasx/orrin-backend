@@ -8,9 +8,22 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/
 """
 
 import os
-
 from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
+from django.urls import path
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'music_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'music_app.settings.local')
 
-application = get_asgi_application()
+django_asgi_app = get_asgi_application()
+
+from users.ws_middleware import JWTAuthMiddleware
+from users.consumers import NotificationConsumer
+
+application = ProtocolTypeRouter({
+    "http": django_asgi_app,
+    "websocket": JWTAuthMiddleware(
+        URLRouter([
+            path("ws/notifications/", NotificationConsumer.as_asgi()),
+        ])
+    ),
+})
