@@ -1,2 +1,2 @@
 from .UserSerializer import UserSerializer
-from .UserProfileSerializer import UserProfileSerializer
+from .UserProfileSerializer import UserProfileSerializer, UserCompactSerializer
