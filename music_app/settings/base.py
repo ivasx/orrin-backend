@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'orrin.apps.OrrinConfig',
     'users.apps.UsersConfig',
     'library.apps.LibraryConfig',
+    'feeds.apps.FeedsConfig',
 
     'rest_framework',
     'corsheaders',
