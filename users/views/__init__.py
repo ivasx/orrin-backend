@@ -5,3 +5,8 @@ from .UserDetailView import UserProfileDetailView
 from .FollowView import ToggleFollowView
 from .FollowersView import UserFollowersView, UserFollowingView
 from .UserPostsView import UserPostsView
+from .NotificationViews import (
+    NotificationListView,
+    MarkNotificationReadView,
+    MarkAllNotificationsReadView,
+)

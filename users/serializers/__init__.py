@@ -1,2 +1,3 @@
 from .UserSerializer import UserSerializer
 from .UserProfileSerializer import UserProfileSerializer, UserCompactSerializer
+from .NotificationSerializer import NotificationSerializer
