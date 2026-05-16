@@ -1,4 +1,5 @@
 import os
+import mutagen
 from django.core.files.storage import default_storage
 from django.db import models
 from django.urls import reverse
@@ -47,11 +48,17 @@ class Track(SluggedModel):
             file_name = self.cover.name
             if default_storage.exists(file_name):
                 self.cover.name = file_name
-            else:
-                pass
 
         super().save(*args, **kwargs)
 
+        if self.audio and not self.duration:
+            try:
+                audio_info = mutagen.File(self.audio.path)
+                if audio_info and hasattr(audio_info, 'info'):
+                    self.duration = int(audio_info.info.length)
+                    super().save(update_fields=['duration'])
+            except Exception as e:
+                pass
 
     def delete(self, *args, **kwargs):
         if self.audio:
