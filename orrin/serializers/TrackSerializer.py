@@ -3,10 +3,11 @@ from rest_framework import serializers
 from .ArtistSerializer import ArtistSerializer
 from ..models import Track
 
+
 class TrackSerializer(serializers.ModelSerializer):
     audio_url = serializers.SerializerMethodField()
     cover_url = serializers.SerializerMethodField()
-    duration_formatted = serializers.CharField(read_only=True)
+    duration_formatted = serializers.SerializerMethodField()
     artist = ArtistSerializer(read_only=True)
 
     class Meta:
@@ -20,6 +21,9 @@ class TrackSerializer(serializers.ModelSerializer):
             'cover_url',
             'audio_url',
         ]
+
+    def get_duration_formatted(self, obj):
+        return obj.duration_formatted()
 
     def get_audio_url(self, obj):
         request = self.context.get('request')
