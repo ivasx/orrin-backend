@@ -1,0 +1,66 @@
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+
+from feed.models import Post, PostLike, PostRepost, PostSave
+from feed.serializers import PostSerializer, PostWriteSerializer
+
+
+def build_interaction_map(user, posts):
+    if not user or not user.is_authenticated:
+        return {'liked': set(), 'reposted': set(), 'saved': set()}
+    post_ids = [p.id for p in posts]
+    return {
+        'liked': set(PostLike.objects.filter(user=user, post_id__in=post_ids).values_list('post_id', flat=True)),
+        'reposted': set(PostRepost.objects.filter(user=user, post_id__in=post_ids).values_list('post_id', flat=True)),
+        'saved': set(PostSave.objects.filter(user=user, post_id__in=post_ids).values_list('post_id', flat=True)),
+    }
+
+
+class FeedView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+        feed_type = request.query_params.get('feed_type', 'all')
+        sort = request.query_params.get('sort', 'recent')
+        content_type = request.query_params.get('content_type')
+        page = int(request.query_params.get('page', 1))
+        page_size = 10
+
+        posts = Post.objects.select_related('author', 'track', 'track__artist')
+
+        if feed_type == 'following' and request.user.is_authenticated:
+            following_ids = request.user.following.values_list('id', flat=True)
+            posts = posts.filter(author_id__in=following_ids)
+
+        if content_type == 'with_music':
+            posts = posts.filter(track__isnull=False)
+        elif content_type == 'text_only':
+            posts = posts.filter(track__isnull=True)
+
+        if sort == 'popular':
+            from django.db.models import Count
+            posts = posts.annotate(likes_total=Count('likes')).order_by('-likes_total', '-created_at')
+        else:
+            posts = posts.order_by('-created_at')
+
+        start = (page - 1) * page_size
+        page_posts = list(posts[start:start + page_size])
+
+        interaction_map = build_interaction_map(request.user, page_posts)
+        serializer = PostSerializer(
+            page_posts,
+            many=True,
+            context={'request': request, 'interaction_map': interaction_map},
+        )
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = PostWriteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        post = serializer.save(author=request.user)
+        return Response(
+            PostSerializer(post, context={'request': request}).data,
+            status=status.HTTP_201_CREATED,
+        )
