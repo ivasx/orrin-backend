@@ -4,7 +4,8 @@ from slugify import slugify
 
 class SluggedModel(models.Model):
     """
-    Abstract model for storing common data
+    Abstract model with automatic slug generation.
+    Slug is built from slug_source_fields and guaranteed unique.
     """
 
     class Meta:
@@ -21,7 +22,10 @@ class SluggedModel(models.Model):
         if self.pk:
             old = self.__class__.objects.filter(pk=self.pk).first()
             if old:
-                changed = any(getattr(self, field) != getattr(old, field) for field in self.slug_source_fields)
+                changed = any(
+                    getattr(self, field) != getattr(old, field)
+                    for field in self.slug_source_fields
+                )
                 if changed:
                     self.slug = None
 
@@ -31,7 +35,7 @@ class SluggedModel(models.Model):
             num = 1
             while self.__class__.objects.filter(slug=slug).exclude(pk=self.pk).exists():
                 slug = f'{base_slug}-{num}'
-            num += 1
+                num += 1
             self.slug = slug
 
         super().save(*args, **kwargs)

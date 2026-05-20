@@ -12,21 +12,20 @@ class LikedTracksView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        liked_track_ids = LikedTrack.objects.filter(
-            user=request.user
-        ).values_list('track_id', flat=True)
-
-        tracks = (
-            Track.objects
-            .filter(id__in=liked_track_ids)
-            .select_related('artist')
-            .order_by('-liked_by__created_at')
+        liked_entries = (
+            LikedTrack.objects
+            .filter(user=request.user)
+            .select_related('track', 'track__artist')
+            .order_by('-created_at')
         )
+
+        liked_ids = {entry.track_id for entry in liked_entries}
+        tracks = [entry.track for entry in liked_entries]
 
         serializer = LibraryTrackSerializer(
             tracks,
             many=True,
-            context={'request': request, 'liked_ids': set(liked_track_ids)},
+            context={'request': request, 'liked_ids': liked_ids},
         )
         return Response(serializer.data)
 

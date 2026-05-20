@@ -8,10 +8,11 @@ urlpatterns = [
     path('api/v1/', include('orrin.urls')),
     path('api/v1/', include('library.urls')),
     path('api/v1/', include('chat.urls')),
+    path('api/v1/', include('feed.urls')),
+    path('api/v1/', include('stats.urls')),
     path('api/v1/auth/', include('users.urls.auth_urls')),
     path('api/v1/users/', include('users.urls.users')),
     path('api/notifications/', include('users.urls.notifications')),
-    path('api/v1/', include('feed.urls')),
     path('api/v1/docs/', include('music_app.urls.swagger')),
 ]
 

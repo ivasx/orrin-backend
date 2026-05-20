@@ -16,7 +16,7 @@ class FriendsActivityView(APIView):
             ListeningHistory.objects
             .filter(user_id__in=following_ids)
             .select_related('track', 'track__artist')
-            .order_by('-played_at')
+            .order_by('track_id', '-played_at')
             .distinct('track_id')[:20]
         )
 
