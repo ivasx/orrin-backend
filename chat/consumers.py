@@ -58,10 +58,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         elif event_type == "send_message":
             text = (data.get("text") or "").strip()
-            if not text:
+            track_id = data.get("trackId")
+
+            if not text and not track_id:
                 return
 
-            message = await self._create_message(text)
+            message = await self._create_message(text, track_id)
             if message is None:
                 return
 
@@ -74,6 +76,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         "chatId": message.chat_id,
                         "senderId": message.sender_id,
                         "text": message.text,
+                        "trackId": message.track_id,
                         "timestamp": message.created_at.isoformat(),
                         "isRead": message.is_read,
                     },
@@ -109,11 +112,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return Chat.objects.filter(pk=self.chat_id, participants=self.user).exists()
 
     @sync_to_async
-    def _create_message(self, text):
+    def _create_message(self, text, track_id):
         try:
             chat = Chat.objects.get(pk=self.chat_id, participants=self.user)
         except Chat.DoesNotExist:
             return None
-        message = Message.objects.create(chat=chat, sender=self.user, text=text)
+        message = Message.objects.create(
+            chat=chat,
+            sender=self.user,
+            text=text,
+            track_id=track_id
+        )
         chat.save()
         return message

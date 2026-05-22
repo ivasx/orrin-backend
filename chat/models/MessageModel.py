@@ -14,7 +14,8 @@ class Message(models.Model):
         on_delete=models.CASCADE,
         related_name="sent_messages",
     )
-    text = models.TextField()
+    text = models.TextField(blank=True)
+    track_id = models.PositiveIntegerField(null=True, blank=True)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
