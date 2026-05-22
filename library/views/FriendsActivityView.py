@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +10,7 @@ from library.serializers import LibraryTrackSerializer
 class FriendsActivityView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Social'])
     def get(self, request):
         following_ids = request.user.following.values_list('id', flat=True)
 

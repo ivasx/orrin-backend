@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ User = get_user_model()
 class RegisterView(APIView):
     permission_classes = (AllowAny,)
 
+    @extend_schema(tags=['Auth'])
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

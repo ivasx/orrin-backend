@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,6 +12,7 @@ from library.serializers import LibraryTrackSerializer
 class LikedTracksView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Library'])
     def get(self, request):
         liked_entries = (
             LikedTrack.objects
@@ -33,6 +35,7 @@ class LikedTracksView(APIView):
 class TrackLikeToggleView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Tracks'])
     def post(self, request, slug):
         track = Track.objects.filter(slug=slug).first()
         if track is None:

@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from orrin.serializers import PlaylistSerializer, PlaylistDetailSerializer, Play
 class PlaylistListView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Playlists'])
     def get(self, request):
         playlists = (
             PlaylistModel.objects
@@ -24,6 +26,7 @@ class PlaylistListView(APIView):
         )
         return Response(serializer.data)
 
+    @extend_schema(tags=['Playlists'])
     def post(self, request):
         serializer = PlaylistWriteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -51,6 +54,7 @@ class PlaylistDetailView(APIView):
             )
         return playlist, None
 
+    @extend_schema(tags=['Playlists'])
     def get(self, request, pk):
         playlist = (
             PlaylistModel.objects
@@ -74,6 +78,7 @@ class PlaylistDetailView(APIView):
             PlaylistDetailSerializer(playlist, context={'request': request}).data
         )
 
+    @extend_schema(tags=['Playlists'])
     def patch(self, request, pk):
         playlist, error = self._get_owned_playlist(request, pk)
         if error:
@@ -86,6 +91,7 @@ class PlaylistDetailView(APIView):
             PlaylistDetailSerializer(playlist, context={'request': request}).data
         )
 
+    @extend_schema(tags=['Playlists'])
     def delete(self, request, pk):
         playlist, error = self._get_owned_playlist(request, pk)
         if error:
@@ -107,7 +113,8 @@ class PlaylistTrackView(APIView):
             )
         return playlist, None
 
-    def post(self, request, pk):
+    @extend_schema(tags=['Playlists'])
+    def post(self, request, pk, track_slug=None):
         playlist, error = self._get_owned_playlist(request, pk)
         if error:
             return error
@@ -141,6 +148,7 @@ class PlaylistTrackView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
+    @extend_schema(tags=['Playlists'])
     def delete(self, request, pk, track_slug):
         playlist, error = self._get_owned_playlist(request, pk)
         if error:

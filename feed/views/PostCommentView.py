@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from feed.serializers import PostCommentSerializer
 class PostCommentView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    @extend_schema(tags=['Feed'])
     def get(self, request, pk):
         post = Post.objects.filter(pk=pk).first()
         if post is None:
@@ -19,6 +21,7 @@ class PostCommentView(APIView):
         serializer = PostCommentSerializer(comments, many=True, context={'request': request})
         return Response(serializer.data)
 
+    @extend_schema(tags=['Feed'])
     def post(self, request, pk):
         post = Post.objects.filter(pk=pk).first()
         if post is None:

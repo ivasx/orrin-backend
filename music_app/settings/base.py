@@ -124,9 +124,22 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
+    'TAGS': [
+        {'name': 'Auth',          'description': 'Registration, login, JWT tokens'},
+        {'name': 'Users',         'description': 'User profiles, follow/unfollow'},
+        {'name': 'Tracks',        'description': 'Music tracks'},
+        {'name': 'Artists',       'description': 'Artists and bands'},
+        {'name': 'Playlists',     'description': 'User playlists'},
+        {'name': 'Library',       'description': 'Liked tracks, followed artists, saved albums'},
+        {'name': 'History',       'description': 'Listening history'},
+        {'name': 'Feed',          'description': 'Social feed, posts, comments, likes'},
+        {'name': 'Chat',          'description': 'Direct messages'},
+        {'name': 'Social',        'description': 'Friends activity'},
+        {'name': 'Stats',         'description': 'Personal listening statistics'},
+        {'name': 'Notifications', 'description': 'In-app notifications'},
+    ],
 }
 
-# JWT Authentication settings
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),

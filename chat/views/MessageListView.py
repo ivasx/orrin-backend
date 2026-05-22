@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -17,6 +18,7 @@ class MessageListView(APIView):
             .first()
         )
 
+    @extend_schema(tags=['Chat'])
     def get(self, request, pk):
         chat = self._get_chat(request, pk)
         if not chat:
@@ -34,6 +36,7 @@ class MessageListView(APIView):
         serializer = MessageSerializer(messages, many=True, context={"request": request})
         return Response(serializer.data)
 
+    @extend_schema(tags=['Chat'])
     def post(self, request, pk):
         chat = self._get_chat(request, pk)
         if not chat:

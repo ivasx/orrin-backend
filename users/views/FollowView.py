@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ User = get_user_model()
 class ToggleFollowView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Users'])
     def post(self, request, username):
         target = get_object_or_404(User, username=username)
 

@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,6 +12,7 @@ from library.serializers import FollowedArtistSerializer
 class FollowedArtistsView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Library'])
     def get(self, request):
         entries = (
             FollowedArtist.objects
@@ -28,6 +30,7 @@ class FollowedArtistsView(APIView):
 class ArtistFollowToggleView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Artists'])
     def post(self, request, slug):
         artist = Artist.objects.filter(slug=slug).first()
         if artist is None:

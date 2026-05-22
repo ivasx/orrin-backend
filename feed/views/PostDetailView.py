@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -13,12 +14,14 @@ class PostDetailView(APIView):
     def _get_post(self, pk):
         return Post.objects.filter(pk=pk).select_related('author', 'track', 'track__artist').first()
 
+    @extend_schema(tags=['Feed'])
     def get(self, request, pk):
         post = self._get_post(pk)
         if post is None:
             return Response({'detail': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
         return Response(PostSerializer(post, context={'request': request}).data)
 
+    @extend_schema(tags=['Feed'])
     def patch(self, request, pk):
         post = self._get_post(pk)
         if post is None:
@@ -30,6 +33,7 @@ class PostDetailView(APIView):
         post = serializer.save()
         return Response(PostSerializer(post, context={'request': request}).data)
 
+    @extend_schema(tags=['Feed'])
     def delete(self, request, pk):
         post = self._get_post(pk)
         if post is None:

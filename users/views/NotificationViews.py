@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,6 +12,7 @@ from users.serializers import NotificationSerializer
 class NotificationListView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Notifications'])
     def get(self, request):
         notifications = (
             Notification.objects
@@ -28,6 +30,7 @@ class NotificationListView(APIView):
 class MarkNotificationReadView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Notifications'])
     def post(self, request, pk):
         notification = get_object_or_404(
             Notification,
@@ -45,6 +48,7 @@ class MarkNotificationReadView(APIView):
 class MarkAllNotificationsReadView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Notifications'])
     def post(self, request):
         Notification.objects.filter(
             recipient=request.user,

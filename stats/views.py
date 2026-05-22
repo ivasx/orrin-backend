@@ -1,4 +1,5 @@
 from django.db.models import Count
+from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -19,6 +20,7 @@ def _preserve_order(model_cls, pk_list, **select_related_fields):
 class TopTracksView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Stats'])
     def get(self, request):
         limit = min(int(request.query_params.get('limit', 10)), 50)
 
@@ -38,6 +40,7 @@ class TopTracksView(APIView):
 class TopArtistsView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Stats'])
     def get(self, request):
         limit = min(int(request.query_params.get('limit', 10)), 50)
 
@@ -57,6 +60,7 @@ class TopArtistsView(APIView):
 class TopAlbumsView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Stats'])
     def get(self, request):
         limit = min(int(request.query_params.get('limit', 10)), 50)
 

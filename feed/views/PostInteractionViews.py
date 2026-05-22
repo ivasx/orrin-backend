@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,6 +10,7 @@ from feed.models import Post, PostLike, PostRepost, PostSave, PostReport
 class PostLikeView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Feed'])
     def post(self, request, pk):
         post = Post.objects.filter(pk=pk).first()
         if post is None:
@@ -24,6 +26,7 @@ class PostLikeView(APIView):
 class PostRepostView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Feed'])
     def post(self, request, pk):
         post = Post.objects.filter(pk=pk).first()
         if post is None:
@@ -39,6 +42,7 @@ class PostRepostView(APIView):
 class PostSaveView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Feed'])
     def post(self, request, pk):
         post = Post.objects.filter(pk=pk).first()
         if post is None:
@@ -54,6 +58,7 @@ class PostSaveView(APIView):
 class PostReportView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Feed'])
     def post(self, request, pk):
         post = Post.objects.filter(pk=pk).first()
         if post is None:

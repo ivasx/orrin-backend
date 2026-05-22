@@ -2,6 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from rest_framework import status
@@ -17,6 +18,7 @@ class GoogleLoginView(APIView):
     permission_classes = (AllowAny,)
     authentication_classes = ()
 
+    @extend_schema(tags=['Auth'])
     def post(self, request):
         token = request.data.get('token')
         if not token:

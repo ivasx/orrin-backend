@@ -1,4 +1,5 @@
 from django.db.models import Count
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -24,6 +25,7 @@ def build_interaction_map(user, posts):
 class FeedView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    @extend_schema(tags=['Feed'])
     def get(self, request):
         feed_type    = request.query_params.get('feed_type', 'all')
         sort         = request.query_params.get('sort', 'recent')
@@ -63,6 +65,7 @@ class FeedView(APIView):
             'next':    page + 1 if (start + PAGE_SIZE) < total else None,
         })
 
+    @extend_schema(tags=['Feed'])
     def post(self, request):
         serializer = PostWriteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

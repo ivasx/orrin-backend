@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ User = get_user_model()
 class ChatListView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(tags=['Chat'])
     def get(self, request):
         chats = (
             Chat.objects
@@ -23,6 +25,7 @@ class ChatListView(APIView):
         serializer = ChatSerializer(chats, many=True, context={"request": request})
         return Response(serializer.data)
 
+    @extend_schema(tags=['Chat'])
     def post(self, request):
         recipient_username = request.data.get("recipient_username", "").strip()
         if not recipient_username:

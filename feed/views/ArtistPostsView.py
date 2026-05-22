@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from orrin.models import Artist
-from feed.models import Post, PostLike, PostRepost, PostSave
+from feed.models import Post
 from feed.serializers import PostSerializer
 from feed.views.FeedView import build_interaction_map
 
@@ -12,6 +13,7 @@ from feed.views.FeedView import build_interaction_map
 class ArtistPostsView(APIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(tags=['Artists'])
     def get(self, request, slug):
         artist = get_object_or_404(Artist, slug=slug)
         posts = list(
