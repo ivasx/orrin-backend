@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from users.views import GoogleLoginView, RegisterView
+from users.views.PasswordResetViews import PasswordResetView, PasswordResetConfirmView
 
 urlpatterns = [
     path('token/', extend_schema(tags=['Auth'])(TokenObtainPairView.as_view()), name='token_obtain_pair'),

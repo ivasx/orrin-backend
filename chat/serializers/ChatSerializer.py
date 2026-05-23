@@ -1,20 +1,22 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .LastMessageSerializer import LastMessageSerializer
-from ..models import Chat
-from .ParticipantSerializer import ParticipantSerializer
+from chat.models import Chat
+from chat.serializers.LastMessageSerializer import LastMessageSerializer
+from chat.serializers.ParticipantSerializer import ParticipantSerializer
 
 User = get_user_model()
+
 
 class ChatSerializer(serializers.ModelSerializer):
     participant = serializers.SerializerMethodField()
     lastMessage = serializers.SerializerMethodField()
     unreadCount = serializers.SerializerMethodField()
+    updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
 
     class Meta:
         model = Chat
-        fields = ("id", "participant", "lastMessage", "unreadCount", "updated_at")
+        fields = ("id", "participant", "lastMessage", "unreadCount", "updatedAt")
 
     def get_participant(self, obj):
         request = self.context.get("request")

@@ -1,21 +1,31 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import viewsets
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from ..models import Artist
-from ..serializers import ArtistSerializer
+from ..serializers.ArtistSerializer import ArtistSerializer, ArtistDetailSerializer
 
 
-@extend_schema_view(
-    list=extend_schema(tags=['Artists']),
-    retrieve=extend_schema(tags=['Artists']),
-    create=extend_schema(tags=['Artists']),
-    update=extend_schema(tags=['Artists']),
-    partial_update=extend_schema(tags=['Artists']),
-    destroy=extend_schema(tags=['Artists']),
-)
 class ArtistViewSet(viewsets.ModelViewSet):
-    queryset = Artist.objects.all()
+    queryset = Artist.objects.prefetch_related("genres").all()
     serializer_class = ArtistSerializer
-    lookup_field = 'slug'
+    lookup_field = "slug"
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ["name", "genres__name"]
+    ordering_fields = ["name", "monthly_listeners"]
+    ordering = ["name"]
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return ArtistDetailSerializer
+        return ArtistSerializer
+
+    def get_queryset(self):
+        if self.action == "retrieve":
+            return (
+                Artist.objects
+                .prefetch_related("genres", "tracks", "followers")
+                .all()
+            )
+        return Artist.objects.prefetch_related("genres").all()

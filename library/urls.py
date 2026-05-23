@@ -10,6 +10,7 @@ from library.views import (
     FriendsActivityView,
     SavedAlbumsView,
 )
+from library.views.LibraryView import LibraryView
 
 urlpatterns = [
     path('library/liked/',    LikedTracksView.as_view(),    name='library-liked'),

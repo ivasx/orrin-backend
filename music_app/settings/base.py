@@ -153,3 +153,12 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
 }
+
+# Email (dev: console backend; prod: replace with SMTP)
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "noreply@orrin.app"
+
+# URL of the frontend — used in password reset links
+PASSWORD_RESET_FRONTEND_URL = os.environ.get(
+    "PASSWORD_RESET_FRONTEND_URL", "http://localhost:5173"
+)

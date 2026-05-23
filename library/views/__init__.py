@@ -3,3 +3,4 @@ from .FollowedArtistsView import FollowedArtistsView, ArtistFollowToggleView
 from .ListeningHistoryView import ListeningHistoryView, ListeningHistoryEntryView
 from .FriendsActivityView import FriendsActivityView
 from .SavedAlbumsView import SavedAlbumsView
+from .LibraryView import LibraryView

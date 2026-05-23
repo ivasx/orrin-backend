@@ -1,3 +1,8 @@
 from .TrackSerializer import TrackSerializer
-from .ArtistSerializer import ArtistSerializer
-from .PlaylistSerializer import PlaylistSerializer, PlaylistDetailSerializer, PlaylistWriteSerializer, PlaylistTrackSerializer
+from .ArtistSerializer import ArtistSerializer, ArtistDetailSerializer
+from .PlaylistSerializer import (
+    PlaylistSerializer,
+    PlaylistDetailSerializer,
+    PlaylistWriteSerializer,
+    PlaylistTrackSerializer,
+)
