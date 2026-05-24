@@ -24,21 +24,36 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'author', 'created_at', 'updated_at']
 
     def get_author(self, obj):
+        request = self.context.get('request')
+        avatar = None
+        if obj.author.avatar and hasattr(obj.author.avatar, 'url'):
+            avatar = (
+                request.build_absolute_uri(obj.author.avatar.url)
+                if request
+                else obj.author.avatar.url
+            )
         return {
             'id': obj.author.id,
             'username': obj.author.username,
-            'avatar': obj.author.avatar.url if obj.author.avatar else None,
+            'avatar': avatar,
         }
 
     def get_track(self, obj):
         if not obj.track:
             return None
         request = self.context.get('request')
+        cover_url = None
+        if obj.track.cover and hasattr(obj.track.cover, 'url'):
+            cover_url = (
+                request.build_absolute_uri(obj.track.cover.url)
+                if request
+                else obj.track.cover.url
+            )
         return {
             'slug': obj.track.slug,
             'title': obj.track.title,
             'artist': obj.track.artist.name,
-            'cover_url': request.build_absolute_uri(obj.track.cover.url) if obj.track.cover else None,
+            'cover_url': cover_url,
         }
 
     def get_likes_count(self, obj):

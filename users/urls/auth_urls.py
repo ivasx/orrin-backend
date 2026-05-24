@@ -9,10 +9,22 @@ from rest_framework_simplejwt.views import (
 from users.views import GoogleLoginView, RegisterView
 from users.views.PasswordResetViews import PasswordResetView, PasswordResetConfirmView
 
+
+@extend_schema(tags=['Auth'])
+class DecoratedTokenObtainPairView(TokenObtainPairView): pass
+
+@extend_schema(tags=['Auth'])
+class DecoratedTokenRefreshView(TokenRefreshView): pass
+
+@extend_schema(tags=['Auth'])
+class DecoratedTokenVerifyView(TokenVerifyView): pass
+
 urlpatterns = [
-    path('token/', extend_schema(tags=['Auth'])(TokenObtainPairView.as_view()), name='token_obtain_pair'),
-    path('token/refresh/', extend_schema(tags=['Auth'])(TokenRefreshView.as_view()), name='token_refresh'),
-    path('token/verify/', extend_schema(tags=['Auth'])(TokenVerifyView.as_view()), name='token_verify'),
+    path('token/', DecoratedTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', DecoratedTokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', DecoratedTokenVerifyView.as_view(), name='token_verify'),
     path('register/', RegisterView.as_view(), name='register'),
     path('google/login/', GoogleLoginView.as_view(), name='google_login'),
+    path('password/reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('password/reset/confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]

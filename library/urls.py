@@ -9,19 +9,22 @@ from library.views import (
     ListeningHistoryEntryView,
     FriendsActivityView,
     SavedAlbumsView,
+    LibraryView,
 )
-from library.views.LibraryView import LibraryView
+from library.views.FavoritesView import FavoritesView
 
 urlpatterns = [
-    path('library/liked/',    LikedTracksView.as_view(),    name='library-liked'),
-    path('library/artists/',  FollowedArtistsView.as_view(), name='library-artists'),
-    path('library/albums/',   SavedAlbumsView.as_view(),    name='library-albums'),
+    path('library/', LibraryView.as_view(), name='library'),
+    path('library/liked/', LikedTracksView.as_view(), name='library-liked'),
+    path('library/artists/', FollowedArtistsView.as_view(), name='library-artists'),
+    path('library/albums/', SavedAlbumsView.as_view(), name='library-albums'),
+    path('favorites/', FavoritesView.as_view(), name='favorites'),
 
-    path('history/',          ListeningHistoryView.as_view(),      name='history-list'),
+    path('history/', ListeningHistoryView.as_view(), name='history-list'),
     path('history/<int:pk>/', ListeningHistoryEntryView.as_view(), name='history-entry'),
 
     path('friends/activity/', FriendsActivityView.as_view(), name='friends-activity'),
 
-    path('tracks/<slug:slug>/like/',   TrackLikeToggleView.as_view(),   name='track-like'),
+    path('tracks/<slug:slug>/like/', TrackLikeToggleView.as_view(), name='track-like'),
     path('artists/<slug:slug>/follow/', ArtistFollowToggleView.as_view(), name='artist-follow'),
 ]

@@ -7,9 +7,11 @@ from users.views import (
     UserFollowersView,
     UserFollowingView,
     UserPostsView,
+    UserSearchView,
 )
 
 urlpatterns = [
+    path('search/', UserSearchView.as_view(), name='user-search'),
     path('me/', CurrentUserProfileView.as_view(), name='user-me'),
     path('<str:username>/', UserProfileDetailView.as_view(), name='user-profile'),
     path('<str:username>/follow/', ToggleFollowView.as_view(), name='user-follow'),

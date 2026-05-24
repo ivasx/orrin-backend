@@ -12,8 +12,16 @@ class PostCommentSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'author', 'created_at']
 
     def get_author(self, obj):
+        request = self.context.get('request')
+        avatar = None
+        if obj.author.avatar and hasattr(obj.author.avatar, 'url'):
+            avatar = (
+                request.build_absolute_uri(obj.author.avatar.url)
+                if request
+                else obj.author.avatar.url
+            )
         return {
             'id': obj.author.id,
             'username': obj.author.username,
-            'avatar': obj.author.avatar.url if obj.author.avatar else None,
+            'avatar': avatar,
         }
