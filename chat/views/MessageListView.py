@@ -46,13 +46,20 @@ class MessageListView(APIView):
             )
 
         text = request.data.get("text", "").strip()
-        if not text:
+        track_id = request.data.get("track_id") or request.data.get("trackId")
+
+        if not text and not track_id:
             return Response(
-                {"detail": "text is required."},
+                {"detail": "text or track_id is required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        message = Message.objects.create(chat=chat, sender=request.user, text=text)
+        message = Message.objects.create(
+            chat=chat,
+            sender=request.user,
+            text=text,
+            track_id=track_id,
+        )
         chat.save()
 
         serializer = MessageSerializer(message, context={"request": request})
