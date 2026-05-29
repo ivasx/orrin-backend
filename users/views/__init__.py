@@ -11,4 +11,4 @@ from .NotificationViews import (
     MarkNotificationReadView,
     MarkAllNotificationsReadView,
 )
-from UserSearchView import UserSearchView
+from .UserSearchView import UserSearchView

@@ -1,17 +1,14 @@
 from django.urls import path
 from drf_spectacular.utils import extend_schema
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
 )
 
 from users.views import GoogleLoginView, RegisterView
 from users.views.PasswordResetViews import PasswordResetView, PasswordResetConfirmView
+from users.views.TokenView import EmailOrUsernameTokenObtainPairView
 
-
-@extend_schema(tags=['Auth'])
-class DecoratedTokenObtainPairView(TokenObtainPairView): pass
 
 @extend_schema(tags=['Auth'])
 class DecoratedTokenRefreshView(TokenRefreshView): pass
@@ -20,7 +17,7 @@ class DecoratedTokenRefreshView(TokenRefreshView): pass
 class DecoratedTokenVerifyView(TokenVerifyView): pass
 
 urlpatterns = [
-    path('token/', DecoratedTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', EmailOrUsernameTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', DecoratedTokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', DecoratedTokenVerifyView.as_view(), name='token_verify'),
     path('register/', RegisterView.as_view(), name='register'),

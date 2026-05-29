@@ -37,12 +37,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "managed_artists",
             "is_following",
         )
-        read_only_fields = ("id", "username", "email", "date_joined")
+        read_only_fields = ("id", "email", "date_joined")
         extra_kwargs = {
-            # Accept uploads via PATCH, but never expose raw file paths in GET
             "avatar": {"write_only": True, "required": False, "allow_null": True},
             "cover_photo": {"write_only": True, "required": False, "allow_null": True},
+            "username": {"required": False},
         }
+
+    def validate_username(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("Username cannot be blank.")
+        qs = User.objects.filter(username=value)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError("This username is already taken.")
+        return value
 
     def get_name(self, obj):
         full = f"{obj.first_name} {obj.last_name}".strip()

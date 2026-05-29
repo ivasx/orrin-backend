@@ -1,3 +1,5 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -63,4 +65,24 @@ class MessageListView(APIView):
         chat.save()
 
         serializer = MessageSerializer(message, context={"request": request})
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        message_data = serializer.data
+
+        # Broadcast to WebSocket group so all participants receive it in real time
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"chat_{pk}",
+            {
+                "type": "chat.receive_message",
+                "message": {
+                    "id": message_data["id"],
+                    "chatId": message_data["chatId"],
+                    "senderId": message_data["senderId"],
+                    "text": message_data["text"],
+                    "trackId": message_data["trackId"],
+                    "timestamp": message_data["timestamp"],
+                    "isRead": message_data["isRead"],
+                },
+            },
+        )
+
+        return Response(message_data, status=status.HTTP_201_CREATED)
