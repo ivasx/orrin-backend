@@ -2,6 +2,9 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
+import cloudinary
+import cloudinary.uploader
+import cloudinary_storage
 
 # Load environment variables from .env file
 load_dotenv()
@@ -24,6 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
+    'cloudinary',
+    'cloudinary_storage',
 
     'orrin.apps.OrrinConfig',
     'users.apps.UsersConfig',
@@ -40,11 +45,12 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = 'music_app.asgi.application'
 
+# Redis channel layer — host is overridden in production.py via REDIS_URL
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('redis', 6379)],
+            'hosts': [os.environ.get('REDIS_URL', 'redis://redis:6379')],
         },
     },
 }

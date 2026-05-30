@@ -23,3 +23,6 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
+
+# Local media files served by Django's FileSystemStorage (default)
+# No cloud storage in development

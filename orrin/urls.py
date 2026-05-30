@@ -16,9 +16,11 @@ urlpatterns = [
     path('library/playlists/<int:pk>/', views.PlaylistDetailView.as_view(), name='playlist-detail'),
     path('library/playlists/<int:pk>/tracks/', views.PlaylistTrackView.as_view(), name='playlist-tracks'),
     path('library/playlists/<int:pk>/tracks/<slug:track_slug>/', views.PlaylistTrackView.as_view(), name='playlist-track-remove'),
-
-    re_path(r'^media/audio/(?P<path>.+)$', views.ServeAudioView.as_view(), name='serve-audio'),
 ]
 
+# ServeAudioView is only needed locally — in production, audio.url points directly to Cloudinary
 if settings.DEBUG:
+    urlpatterns += [
+        re_path(r'^media/audio/(?P<path>.+)$', views.ServeAudioView.as_view(), name='serve-audio'),
+    ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
