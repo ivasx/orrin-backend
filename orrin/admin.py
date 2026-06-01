@@ -1,8 +1,8 @@
-import os
-
+import io
+import mutagen
 from django.contrib import admin
+from django.core.files.storage import default_storage
 from django.utils.html import format_html
-from mutagen import File
 
 from .models import Track, Artist, BandMembership, Genre, PlaylistModel, PlaylistTrack
 
@@ -86,9 +86,11 @@ class TrackAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        if obj.audio and os.path.exists(obj.audio.path):
+        if obj.audio and not obj.duration:
             try:
-                audio_file = File(obj.audio.path)
+                with default_storage.open(obj.audio.name, 'rb') as f:
+                    audio_data = io.BytesIO(f.read())
+                audio_file = mutagen.File(audio_data)
                 if audio_file and audio_file.info:
                     obj.duration = int(audio_file.info.length)
                     obj.save(update_fields=("duration",))
