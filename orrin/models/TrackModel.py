@@ -1,4 +1,4 @@
-import os
+import io
 import mutagen
 from django.core.files.storage import default_storage
 from django.db import models
@@ -43,6 +43,17 @@ class Track(SluggedModel):
     def get_absolute_url(self):
         return reverse('track-detail-api', kwargs={'slug': self.slug})
 
+    def _extract_duration(self):
+        try:
+            with default_storage.open(self.audio.name, 'rb') as f:
+                audio_data = io.BytesIO(f.read())
+            audio_info = mutagen.File(audio_data)
+            if audio_info and hasattr(audio_info, 'info'):
+                return int(audio_info.info.length)
+        except Exception:
+            pass
+        return None
+
     def save(self, *args, **kwargs):
         if self.cover:
             file_name = self.cover.name
@@ -52,19 +63,25 @@ class Track(SluggedModel):
         super().save(*args, **kwargs)
 
         if self.audio and not self.duration:
-            try:
-                audio_info = mutagen.File(self.audio.path)
-                if audio_info and hasattr(audio_info, 'info'):
-                    self.duration = int(audio_info.info.length)
-                    super().save(update_fields=['duration'])
-            except Exception as e:
-                pass
+            duration = self._extract_duration()
+            if duration:
+                self.duration = duration
+                super().save(update_fields=['duration'])
 
     def delete(self, *args, **kwargs):
-        if self.audio:
-            if os.path.exists(self.audio.path):
-                os.remove(self.audio.path)
-        if self.cover:
-            if os.path.exists(self.cover.path):
-                os.remove(self.cover.path)
+        audio_name = self.audio.name if self.audio else None
+        cover_name = self.cover.name if self.cover else None
+
         super().delete(*args, **kwargs)
+
+        if audio_name:
+            try:
+                default_storage.delete(audio_name)
+            except Exception:
+                pass
+
+        if cover_name:
+            try:
+                default_storage.delete(cover_name)
+            except Exception:
+                pass
