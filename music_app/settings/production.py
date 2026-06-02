@@ -50,7 +50,8 @@ cloudinary.config(
     api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
 )
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Smart router: images - > Cloudinary image, audio - >Cloudinary raw
+DEFAULT_FILE_STORAGE = 'orrin.storage.SmartCloudinaryStorage'
 
 # Email via Gmail SMTP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -59,8 +60,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-
-import logging
-logger = logging.getLogger(__name__)
-logger.warning(f"DEFAULT_FILE_STORAGE = {DEFAULT_FILE_STORAGE}")
-logger.warning(f"CLOUDINARY_STORAGE = {CLOUDINARY_STORAGE}")
