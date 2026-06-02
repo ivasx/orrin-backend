@@ -3,7 +3,7 @@ import os
 from django.core.asgi import get_asgi_application
 from django.urls import path
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "music_app.settings.local")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "music_app.settings.production")
 
 django_asgi_app = get_asgi_application()
 
