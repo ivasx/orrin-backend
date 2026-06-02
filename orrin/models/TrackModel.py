@@ -55,11 +55,6 @@ class Track(SluggedModel):
         return None
 
     def save(self, *args, **kwargs):
-        if self.cover:
-            file_name = self.cover.name
-            if default_storage.exists(file_name):
-                self.cover.name = file_name
-
         super().save(*args, **kwargs)
 
         if self.audio and not self.duration:
