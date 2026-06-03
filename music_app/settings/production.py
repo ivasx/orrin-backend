@@ -60,3 +60,25 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+
+import logging
+
+_log = logging.getLogger(__name__)
+_log.warning(f"[PRODUCTION] Settings loaded. DEFAULT_FILE_STORAGE={DEFAULT_FILE_STORAGE}")
+_log.warning(f"[PRODUCTION] CLOUDINARY_STORAGE={CLOUDINARY_STORAGE}")
+
+# Verify SmartCloudinaryStorage can be imported right now
+try:
+    from orrin.storage import SmartCloudinaryStorage
+
+    _log.warning(f"[PRODUCTION] SmartCloudinaryStorage import OK: {SmartCloudinaryStorage}")
+except Exception as e:
+    _log.warning(f"[PRODUCTION] SmartCloudinaryStorage import FAILED: {e}")
+
+# Verify default_storage is actually our class
+try:
+    from django.core.files.storage import default_storage
+
+    _log.warning(f"[PRODUCTION] default_storage class={default_storage.__class__}")
+except Exception as e:
+    _log.warning(f"[PRODUCTION] default_storage check FAILED: {e}")
