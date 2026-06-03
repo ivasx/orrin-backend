@@ -1,44 +1,62 @@
 import os
+import cloudinary
+import dj_database_url
+from .base import *
 
-from django.core.files.storage import Storage
+# Production overrides - strict security
+DEBUG = False
 
+# Expected to be passed as comma-separated values in env, e.g., "api.orrin.com,123.45.67.89"
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 
-class SmartCloudinaryStorage(Storage):
-    """
-    Routes files to the correct Cloudinary resource type based on file extension.
-    Images → MediaCloudinaryStorage (resource_type=image)
-    Audio/raw files → RawMediaCloudinaryStorage (resource_type=raw)
+# Strict CORS policy for production
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',')
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
 
-    Plugged in via DEFAULT_FILE_STORAGE — models stay storage-agnostic.
-    Swap the entire backend by replacing this class in settings.
-    """
+# Production database configuration via DATABASE_URL (provided by Supabase)
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True,
+    )
+}
 
-    AUDIO_EXTENSIONS = {'.mp3', '.flac', '.wav', '.ogg', '.aac', '.m4a', '.opus'}
+# Whitenoise serves static files without a separate CDN
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-    def _get_backend(self, name):
-        from cloudinary_storage.storage import MediaCloudinaryStorage, RawMediaCloudinaryStorage
-        ext = os.path.splitext(name)[1].lower()
-        if ext in self.AUDIO_EXTENSIONS:
-            return RawMediaCloudinaryStorage()
-        return MediaCloudinaryStorage()
+# Redis channel layer — uses Upstash Redis URL in production
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+    },
+}
 
-    def _open(self, name, mode='rb'):
-        return self._get_backend(name)._open(name, mode)
+# Media files storage — Cloudinary
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
 
-    def _save(self, name, content):
-        return self._get_backend(name)._save(name, content)
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+)
 
-    def delete(self, name):
-        return self._get_backend(name).delete(name)
+# Smart router: images → Cloudinary image, audio → Cloudinary raw
+DEFAULT_FILE_STORAGE = 'orrin.storage.SmartCloudinaryStorage'
 
-    def exists(self, name):
-        return self._get_backend(name).exists(name)
-
-    def url(self, name):
-        return self._get_backend(name).url(name)
-
-    def size(self, name):
-        return self._get_backend(name).size(name)
-
-    def get_available_name(self, name, max_length=None):
-        return self._get_backend(name).get_available_name(name, max_length=max_length)
+# Email via Gmail SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
