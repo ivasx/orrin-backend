@@ -14,6 +14,8 @@ urlpatterns = [
     path('api/v1/', include('stats.urls')),
     path('api/v1/auth/', include('users.urls.auth_urls')),
     path('api/v1/users/', include('users.urls.users')),
+    path('api/v1/', include('notes.urls')),
+    path('api/v1/', include('legal.urls')),
     path('api/notifications/', include('users.urls.notifications')),
     path('api/v1/docs/', include('music_app.urls.swagger')),
 ]

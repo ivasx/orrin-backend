@@ -1,0 +1,1 @@
+from .LegalDocument import LegalDocument

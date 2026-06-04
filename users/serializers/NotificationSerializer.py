@@ -3,29 +3,84 @@ from rest_framework import serializers
 from users.models import Notification
 
 
-class ActorSerializer(serializers.Serializer):
+class NotificationActorSerializer(serializers.Serializer):
     id = serializers.IntegerField()
+    name = serializers.SerializerMethodField()
     username = serializers.CharField()
-    avatar = serializers.SerializerMethodField()
+    avatarUrl = serializers.SerializerMethodField()
 
-    def get_avatar(self, obj):
-        request = self.context.get("request")
-        if obj.avatar and hasattr(obj.avatar, "url"):
+    def get_name(self, obj):
+        full = f'{obj.first_name} {obj.last_name}'.strip()
+        return full or obj.username
+
+    def get_avatarUrl(self, obj):
+        request = self.context.get('request')
+        if obj.avatar and hasattr(obj.avatar, 'url'):
             return request.build_absolute_uri(obj.avatar.url) if request else obj.avatar.url
         return None
 
 
+class NotificationEntitySerializer(serializers.Serializer):
+    """
+    Resolves the GenericForeignKey content_object into a unified
+    { id, title, coverUrl } shape regardless of the actual model.
+    """
+
+    id = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+    coverUrl = serializers.SerializerMethodField()
+
+    def get_id(self, obj):
+        return obj.object_id
+
+    def get_title(self, obj):
+        entity = obj.content_object
+        if entity is None:
+            return None
+        # Works for Track, Album, Playlist — all have a `title` field
+        return getattr(entity, 'title', None) or getattr(entity, 'name', None)
+
+    def get_coverUrl(self, obj):
+        entity = obj.content_object
+        if entity is None:
+            return None
+        request = self.context.get('request')
+        # Try common cover field names
+        for field in ('cover', 'image', 'cover_photo', 'avatar'):
+            cover = getattr(entity, field, None)
+            if cover and hasattr(cover, 'url'):
+                return (
+                    request.build_absolute_uri(cover.url)
+                    if request
+                    else cover.url
+                )
+        return None
+
+
 class NotificationSerializer(serializers.ModelSerializer):
-    actor = ActorSerializer(read_only=True)
+    type = serializers.CharField(source='notification_type')
+    actor = serializers.SerializerMethodField()
+    entity = serializers.SerializerMethodField()
 
     class Meta:
         model = Notification
         fields = (
-            "id",
-            "notification_type",
-            "actor",
-            "text",
-            "is_read",
-            "created_at",
+            'id',
+            'type',
+            'isRead',
+            'timestamp',
+            'actor',
+            'entity',
         )
-        read_only_fields = fields
+
+    # camelCase aliases
+    isRead = serializers.BooleanField(source='is_read', read_only=True)
+    timestamp = serializers.DateTimeField(source='created_at', read_only=True)
+
+    def get_actor(self, obj):
+        return NotificationActorSerializer(obj.actor, context=self.context).data
+
+    def get_entity(self, obj):
+        if obj.content_object is None:
+            return None
+        return NotificationEntitySerializer(obj, context=self.context).data

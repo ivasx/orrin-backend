@@ -2,5 +2,5 @@ from .LikedTracksView import LikedTracksView, TrackLikeToggleView
 from .FollowedArtistsView import FollowedArtistsView, ArtistFollowToggleView
 from .ListeningHistoryView import ListeningHistoryView, ListeningHistoryEntryView
 from .FriendsActivityView import FriendsActivityView
-from .SavedAlbumsView import SavedAlbumsView
+from .SavedAlbumsView import SavedAlbumsView, AlbumSaveToggleView
 from .LibraryView import LibraryView

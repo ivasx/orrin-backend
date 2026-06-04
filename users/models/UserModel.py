@@ -17,7 +17,12 @@ class User(AbstractUser):
         'self',
         symmetrical=False,
         related_name='following',
-        blank=True
+        blank=True,
+    )
+    is_verified = models.BooleanField(
+        default=False,
+        verbose_name='Verified',
+        help_text='Designates whether this user profile has been verified.',
     )
 
     USERNAME_FIELD = 'email'

@@ -1,2 +1,1 @@
-from .PostSerializer import PostSerializer, PostWriteSerializer
-from .PostCommentSerializer import PostCommentSerializer
+from .PostSerializer import PostSerializer, PostWriteSerializer, PostCommentSerializer
