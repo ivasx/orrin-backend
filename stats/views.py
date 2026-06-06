@@ -5,11 +5,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from library.models import ListeningHistory
-from orrin.models import Track, Artist
+from orrin.models import Track, Artist, Album
 from orrin.serializers import TrackSerializer, ArtistSerializer
+from orrin.serializers.AlbumSerializer import AlbumListSerializer
 
 
-def _preserve_order(model_cls, pk_list, **select_related_fields):
+def _preserve_order(model_cls, pk_list, *select_related_fields):
     qs = model_cls.objects.filter(id__in=pk_list)
     if select_related_fields:
         qs = qs.select_related(*select_related_fields)
@@ -34,7 +35,9 @@ class TopTracksView(APIView):
         )
 
         tracks = _preserve_order(Track, track_ids, 'artist')
-        return Response(TrackSerializer(tracks, many=True, context={'request': request}).data)
+        return Response(
+            TrackSerializer(tracks, many=True, context={'request': request}).data
+        )
 
 
 class TopArtistsView(APIView):
@@ -54,24 +57,39 @@ class TopArtistsView(APIView):
         )
 
         artists = _preserve_order(Artist, artist_ids)
-        return Response(ArtistSerializer(artists, many=True, context={'request': request}).data)
+        return Response(
+            ArtistSerializer(artists, many=True, context={'request': request}).data
+        )
 
 
 class TopAlbumsView(APIView):
+    """
+    Returns the albums the user has listened to the most,
+    ranked by total play count across all tracks in each album.
+    """
+
     permission_classes = [IsAuthenticated]
 
     @extend_schema(tags=['Stats'])
     def get(self, request):
         limit = min(int(request.query_params.get('limit', 10)), 50)
 
-        track_ids = list(
+        # Find album IDs ordered by total plays of their tracks
+        album_ids = list(
             ListeningHistory.objects
             .filter(user=request.user)
-            .values('track_id')
+            .values('track__album_entries__album_id')
+            .exclude(track__album_entries__album_id__isnull=True)
             .annotate(play_count=Count('id'))
             .order_by('-play_count')
-            .values_list('track_id', flat=True)[:limit]
+            .values_list('track__album_entries__album_id', flat=True)[:limit]
         )
 
-        tracks = _preserve_order(Track, track_ids, 'artist')
-        return Response(TrackSerializer(tracks, many=True, context={'request': request}).data)
+        albums = _preserve_order(
+            Album,
+            album_ids,
+            'artist',
+        )
+        return Response(
+            AlbumListSerializer(albums, many=True, context={'request': request}).data
+        )
