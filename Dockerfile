@@ -14,4 +14,4 @@ RUN python manage.py collectstatic --noinput --settings=music_app.settings.produ
 
 EXPOSE 8000
 
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "music_app.asgi:application"]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "--verbosity", "1", "music_app.asgi:application"]
