@@ -21,11 +21,6 @@ class NotificationActorSerializer(serializers.Serializer):
 
 
 class NotificationEntitySerializer(serializers.Serializer):
-    """
-    Resolves the GenericForeignKey content_object into a unified
-    { id, title, coverUrl } shape regardless of the actual model.
-    """
-
     id = serializers.SerializerMethodField()
     title = serializers.SerializerMethodField()
     coverUrl = serializers.SerializerMethodField()
@@ -37,7 +32,6 @@ class NotificationEntitySerializer(serializers.Serializer):
         entity = obj.content_object
         if entity is None:
             return None
-        # Works for Track, Album, Playlist — all have a `title` field
         return getattr(entity, 'title', None) or getattr(entity, 'name', None)
 
     def get_coverUrl(self, obj):
@@ -45,20 +39,17 @@ class NotificationEntitySerializer(serializers.Serializer):
         if entity is None:
             return None
         request = self.context.get('request')
-        # Try common cover field names
         for field in ('cover', 'image', 'cover_photo', 'avatar'):
             cover = getattr(entity, field, None)
             if cover and hasattr(cover, 'url'):
-                return (
-                    request.build_absolute_uri(cover.url)
-                    if request
-                    else cover.url
-                )
+                return request.build_absolute_uri(cover.url) if request else cover.url
         return None
 
 
 class NotificationSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(source='notification_type')
+    type = serializers.CharField(source='notification_type', read_only=True)
+    isRead = serializers.BooleanField(source='is_read', read_only=True)
+    timestamp = serializers.DateTimeField(source='created_at', read_only=True)
     actor = serializers.SerializerMethodField()
     entity = serializers.SerializerMethodField()
 
@@ -72,10 +63,6 @@ class NotificationSerializer(serializers.ModelSerializer):
             'actor',
             'entity',
         )
-
-    # camelCase aliases
-    isRead = serializers.BooleanField(source='is_read', read_only=True)
-    timestamp = serializers.DateTimeField(source='created_at', read_only=True)
 
     def get_actor(self, obj):
         return NotificationActorSerializer(obj.actor, context=self.context).data
